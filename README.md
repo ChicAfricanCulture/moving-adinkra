@@ -41,7 +41,7 @@ A moving-row puzzle game where you match West African Adinkra symbols. Test your
 | Gye Nyame | Supremacy of God |
 | Akoma | Love and patience |
 | Duafe | Beauty and care |
-| Funtunfunefu | Unity in diversity |
+| Odo Nyera Fie Kwan | Eternal love |
 
 ##Built With
 
@@ -51,7 +51,7 @@ A moving-row puzzle game where you match West African Adinkra symbols. Test your
 
 ##Live Demo
 
-[Play Adinkra Movers](https://yourusername.github.io/moving-adinkra)
+[Play Adinkra Movers]([Play](https://chicafricanculture.github.io/moving-adinkra/))
 
 
 ##License
