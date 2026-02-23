@@ -10,12 +10,12 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            user-select: none; /* Prevent accidental text selection while tapping */
-            -webkit-tap-highlight-color: transparent; /* Remove mobile tap highlight */
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
         body {
             font-family: system-ui, -apple-system, sans-serif;
-            background: #f5e7d9; /* Warm background */
+            background: #f5e7d9;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -94,7 +94,7 @@
             margin-bottom: 15px;
         }
         .row-container {
-            overflow: hidden; /* Hides the overflowing parts of the moving row */
+            overflow: hidden;
             white-space: nowrap;
             width: 100%;
             margin: 10px 0;
@@ -108,7 +108,6 @@
             white-space: nowrap;
             will-change: transform;
         }
-        /* Individual symbol images in rows */
         .row-symbol {
             width: 65px;
             height: 65px;
@@ -120,7 +119,6 @@
             -webkit-tap-highlight-color: transparent;
             filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.3));
         }
-        /* Shake animation for wrong clicks */
         .shake-animation {
             animation: shake 0.3s ease-in-out;
         }
@@ -174,18 +172,14 @@
 </head>
 <body>
     <div class="game-container">
-        <!-- TARGET SECTION (What to find) -->
+        <!-- TARGET SECTION -->
         <div class="target-section">
             <div class="target-label">✨ FIND THESE ✨</div>
-            <div id="targetContainer">
-                <!-- Dynamically filled by JavaScript -->
-            </div>
+            <div id="targetContainer"></div>
         </div>
 
-        <!-- GAME ROWS SECTION (Level 1: 1 Row) -->
-        <div class="rows-section" id="rowsArea">
-            <!-- Row 1 will be injected here by JavaScript -->
-        </div>
+        <!-- GAME ROWS SECTION -->
+        <div class="rows-section" id="rowsArea"></div>
 
         <!-- STATUS BAR -->
         <div class="status-bar">
@@ -196,50 +190,47 @@
     </div>
 
     <script>
-        // === CONFIGURATION ===
-        // List your symbols and their filenames (match exactly what you uploaded)
+        // === YOUR SYMBOLS WITH CORRECT FILENAMES ===
         const SYMBOLS = [
-            { name: 'Sankofa', file: 'sankofa.png', meaning: 'Return and get it' },
-            { name: 'Dwennimmen', file: 'dwennimmen.png', meaning: 'Strength & humility' },
-            { name: 'Gye Nyame', file: 'gyenyame.png', meaning: 'Supremacy of God' },
-            { name: 'Akoma', file: 'akoma.png', meaning: 'Love & patience' },
-            { name: 'Duafe', file: 'duafe.png', meaning: 'Beauty & care' },
-            { name: 'Odo Nyera', file: 'odo-nyera.png', meaning: 'Eternal love' } // adjust filename if needed
+            { name: 'Sankofa', file: 'Sankofa-egg.png', meaning: 'Return and get it' },
+            { name: 'Dwennimmen', file: 'Dwennimmen-a.png', meaning: 'Strength & humility' },
+            { name: 'Gye Nyame', file: 'Gye-Nyame.png', meaning: 'Supremacy of God' },
+            { name: 'Akoma', file: 'Akoma-d.png', meaning: 'Love & patience' },
+            { name: 'Duafe', file: 'Duafe-beauty.png', meaning: 'Beauty & care' },
+            { name: 'Odo Nyera', file: 'love-will.png', meaning: 'Eternal love' }
         ];
 
-        // Level definitions (Level 1 only for now)
+        // Level 1: one row, one target (Sankofa)
         const LEVELS = [
             { level: 1, rows: 1, symbols: ['Sankofa'], colors: ['black'], targets: 1 }
         ];
 
         let currentLevelIndex = 0;
-        let currentTargets = [];           // List of target objects { symbolName, color }
+        let currentTargets = [];
         let targetsFound = 0;
         let levelComplete = false;
-        let animationPlaying = true;        // Used to pause rows
+
         const rowsArea = document.getElementById('rowsArea');
         const targetContainer = document.getElementById('targetContainer');
         const levelDisplay = document.getElementById('levelDisplay');
         const progressCounter = document.getElementById('progressCounter');
 
-        // === HELPER: Create a symbol image element with data attributes ===
+        // === CREATE CLICKABLE SYMBOL IMAGE ===
         function createSymbolImage(symbolName, color = 'black') {
             const symbol = SYMBOLS.find(s => s.name === symbolName);
             if (!symbol) return null;
             
             const img = document.createElement('img');
-            img.src = `assets/symbols/${symbol.file}`;  // Path to your symbol folder
+            img.src = `assets/symbols/${symbol.file}`;
             img.alt = symbolName;
             img.className = 'row-symbol';
             img.setAttribute('data-symbol', symbolName);
             img.setAttribute('data-color', color);
-            
-            // Add click handler
             img.addEventListener('click', symbolClickHandler);
             return img;
         }
 
-        // === CLICK HANDLER (game logic) ===
+        // === CLICK HANDLER ===
         function symbolClickHandler(event) {
             if (levelComplete) return;
             
@@ -247,40 +238,34 @@
             const symbolName = img.dataset.symbol;
             const color = img.dataset.color;
             
-            // Check if this symbol-color matches any current target
             const targetIndex = currentTargets.findIndex(t => t.symbolName === symbolName && t.color === color);
             
             if (targetIndex !== -1) {
-                // CORRECT CLICK!
+                // Correct!
                 playSound(true);
                 
-                // Remove this target from the list
                 currentTargets.splice(targetIndex, 1);
                 targetsFound++;
                 progressCounter.innerText = `${targetsFound} / ${LEVELS[currentLevelIndex].targets}`;
-                
-                // Update target display
                 renderTargets();
                 
-                // If all targets found, complete level
                 if (currentTargets.length === 0) {
                     levelComplete = true;
                     pauseAllRows();
                     setTimeout(() => {
-                        alert('🎉 Level 1 Complete! Well done!');
-                        // For now, just reset level. You'll add progression later.
+                        alert('🎉 Level 1 Complete! You found Sankofa!');
                         resetGame();
                     }, 200);
                 }
             } else {
-                // WRONG CLICK
+                // Wrong!
                 playSound(false);
                 img.classList.add('shake-animation');
                 setTimeout(() => img.classList.remove('shake-animation'), 300);
             }
         }
 
-        // === RENDER TARGETS AT TOP ===
+        // === RENDER TARGETS ===
         function renderTargets() {
             targetContainer.innerHTML = '';
             currentTargets.forEach(target => {
@@ -304,22 +289,19 @@
             });
         }
 
-        // === BUILD ROWS FOR CURRENT LEVEL ===
+        // === BUILD LEVEL ===
         function buildLevel(levelIndex) {
             const level = LEVELS[levelIndex];
             if (!level) return;
             
-            rowsArea.innerHTML = ''; // Clear previous rows
+            rowsArea.innerHTML = '';
             levelComplete = false;
-            animationPlaying = true;
             
-            // Set targets for this level
+            // Set targets
             currentTargets = [];
-            const targetSymbols = level.symbols;
             for (let i = 0; i < level.targets; i++) {
-                // For level 1, just use the first symbol with black
                 currentTargets.push({ 
-                    symbolName: targetSymbols[i % targetSymbols.length], 
+                    symbolName: level.symbols[i % level.symbols.length], 
                     color: level.colors[i % level.colors.length] 
                 });
             }
@@ -328,7 +310,7 @@
             levelDisplay.innerText = `Level ${level.level}`;
             renderTargets();
             
-            // Create rows (Level 1: just one row)
+            // Create rows
             for (let r = 0; r < level.rows; r++) {
                 const rowContainer = document.createElement('div');
                 rowContainer.className = 'row-container';
@@ -337,9 +319,8 @@
                 movingRow.className = 'moving-row';
                 movingRow.id = `row-${r}`;
                 
-                // Populate with symbols (repeat many times for seamless scroll)
-                // Use all 6 symbols randomly, but ensure target symbols appear frequently
-                for (let i = 0; i < 15; i++) { // 15 symbols per row segment
+                // Add 20 symbols per row (mix of all your symbols)
+                for (let i = 0; i < 20; i++) {
                     const randomSymbol = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)].name;
                     const img = createSymbolImage(randomSymbol, 'black');
                     if (img) movingRow.appendChild(img);
@@ -348,15 +329,11 @@
                 rowContainer.appendChild(movingRow);
                 rowsArea.appendChild(rowContainer);
                 
-                // Apply different directions based on row index (Level1: right->left)
-                if (r % 2 === 0) {
-                    movingRow.style.animation = 'scrollLeft 10s linear infinite';
-                } else {
-                    movingRow.style.animation = 'scrollRight 10s linear infinite';
-                }
+                // Direction: right to left
+                movingRow.style.animation = 'scrollLeft 12s linear infinite';
             }
             
-            // Add keyframes for scrolling if not already present
+            // Add keyframes if not present
             if (!document.getElementById('scrollKeyframes')) {
                 const styleSheet = document.createElement("style");
                 styleSheet.id = 'scrollKeyframes';
@@ -374,23 +351,19 @@
             }
         }
 
-        // === PAUSE ALL ROWS ===
         function pauseAllRows() {
             document.querySelectorAll('.moving-row').forEach(row => {
                 row.style.animationPlayState = 'paused';
             });
-            animationPlaying = false;
         }
 
-        // === RESUME ALL ROWS ===
         function resumeAllRows() {
             document.querySelectorAll('.moving-row').forEach(row => {
                 row.style.animationPlayState = 'running';
             });
-            animationPlaying = true;
         }
 
-        // === SIMPLE SOUND (using Web Audio API - beep) ===
+        // === SIMPLE SOUND ===
         function playSound(isCorrect) {
             try {
                 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -401,27 +374,25 @@
                 gainNode.connect(audioCtx.destination);
                 
                 if (isCorrect) {
-                    oscillator.frequency.setValueAtTime(800, audioCtx.currentTime); // Higher pitch
+                    oscillator.frequency.setValueAtTime(800, audioCtx.currentTime);
                     gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
                 } else {
-                    oscillator.frequency.setValueAtTime(300, audioCtx.currentTime); // Lower buzz
+                    oscillator.frequency.setValueAtTime(300, audioCtx.currentTime);
                     gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
                 }
                 
                 oscillator.start();
                 oscillator.stop(audioCtx.currentTime + 0.1);
-            } catch (e) {
-                // Silently fail if audio not supported
-            }
+            } catch (e) {}
         }
 
-        // === RESET GAME (back to level 1) ===
+        // === RESET ===
         window.resetGame = function() {
             currentLevelIndex = 0;
             buildLevel(0);
         };
 
-        // === INITIALIZE GAME ===
+        // === START ===
         window.onload = function() {
             resetGame();
         };
