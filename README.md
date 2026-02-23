@@ -2,7 +2,7 @@
 
 A moving-row puzzle game where you match West African Adinkra symbols. Test your focus as rows move in different directions, colors distract, and symbols get harder to distinguish.
 
-🎮 **Play it here**: [[Your GitHub Pages URL will go here](https://chicafricanculture.github.io/moving-adinkra/)]
+🎮 **Play it here**: [Adinkra Movers](https://chicafricanculture.github.io/moving-adinkra/)]
 
 ##How to Play
 
