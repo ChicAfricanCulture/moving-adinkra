@@ -1,1 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Adinkra Movers</title>
+    <style>
+        /* === RESET & BASE === */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none; /* Prevent accidental text selection while tapping */
+            -webkit-tap-highlight-color: transparent; /* Remove mobile tap highlight */
+        }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: #f5e7d9; /* Warm background */
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 10px;
+        }
+        .game-container {
+            max-width: 450px;
+            width: 100%;
+            background: #fff7ef;
+            border-radius: 40px 40px 20px 20px;
+            box-shadow: 0 15px 25px rgba(0,0,0,0.15);
+            padding: 20px 15px 30px 15px;
+            border: 2px solid #cfa776;
+        }
 
+        /* === TARGET AREA (TOP) === */
+        .target-section {
+            background: #2b1b0e;
+            color: #ffd966;
+            padding: 20px 15px;
+            border-radius: 30px;
+            margin-bottom: 25px;
+            text-align: center;
+            border: 3px solid #b5835a;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+        }
+        .target-label {
+            font-size: 1rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-weight: 500;
+            color: #e6cba0;
+            margin-bottom: 12px;
+        }
+        #targetContainer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            min-height: 70px;
+        }
+        .target-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            background: #4a3624;
+            padding: 10px 15px;
+            border-radius: 50px;
+            border: 2px solid #d4a373;
+        }
+        .target-item img {
+            width: 50px;
+            height: 50px;
+            filter: drop-shadow(0 3px 3px #00000066);
+        }
+        .target-item span {
+            font-size: 0.7rem;
+            font-weight: bold;
+            color: #f8e3c2;
+            background: #1f140e;
+            padding: 3px 10px;
+            border-radius: 50px;
+        }
+
+        /* === ROWS SECTION (GAME AREA) === */
+        .rows-section {
+            background: #e7d6bf;
+            padding: 20px 5px;
+            border-radius: 50px;
+            border: 3px solid #a0714b;
+            box-shadow: inset 0 0 0 2px #f9efdb;
+            margin-bottom: 15px;
+        }
+        .row-container {
+            overflow: hidden; /* Hides the overflowing parts of the moving row */
+            white-space: nowrap;
+            width: 100%;
+            margin: 10px 0;
+            background: #d8c5aa;
+            border-radius: 60px;
+            padding: 8px 0;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.2);
+        }
+        .moving-row {
+            display: inline-block;
+            white-space: nowrap;
+            will-change: transform;
+        }
+        /* Individual symbol images in rows */
+        .row-symbol {
+            width: 65px;
+            height: 65px;
+            margin: 0 6px;
+            display: inline-block;
+            object-fit: contain;
+            cursor: pointer;
+            transition: transform 0.05s;
+            -webkit-tap-highlight-color: transparent;
+            filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.3));
+        }
+        /* Shake animation for wrong clicks */
+        .shake-animation {
+            animation: shake 0.3s ease-in-out;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-8px); }
+            40% { transform: translateX(8px); }
+            60% { transform: translateX(-4px); }
+            80% { transform: translateX(4px); }
+        }
+
+        /* === STATUS BAR (BOTTOM) === */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #2b1b0e;
+            color: #ffd966;
+            padding: 12px 20px;
+            border-radius: 60px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            border: 2px solid #b5835a;
+            margin-top: 15px;
+        }
+        #progressCounter {
+            background: #5e3a22;
+            padding: 5px 18px;
+            border-radius: 40px;
+            color: #ffdfa7;
+        }
+        #levelDisplay {
+            background: #c79b6e;
+            color: #1f140e;
+            padding: 5px 18px;
+            border-radius: 40px;
+        }
+        button {
+            background: #dbb48b;
+            border: none;
+            border-radius: 40px;
+            padding: 8px 20px;
+            font-weight: bold;
+            color: #2b1b0e;
+            border: 2px solid #ffdbb5;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        button:active { background: #b5835a; }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <!-- TARGET SECTION (What to find) -->
+        <div class="target-section">
+            <div class="target-label">✨ FIND THESE ✨</div>
+            <div id="targetContainer">
+                <!-- Dynamically filled by JavaScript -->
+            </div>
+        </div>
+
+        <!-- GAME ROWS SECTION (Level 1: 1 Row) -->
+        <div class="rows-section" id="rowsArea">
+            <!-- Row 1 will be injected here by JavaScript -->
+        </div>
+
+        <!-- STATUS BAR -->
+        <div class="status-bar">
+            <span id="levelDisplay">Level 1</span>
+            <span id="progressCounter">0 / 1</span>
+            <button id="resetButton" onclick="resetGame()">↺</button>
+        </div>
+    </div>
+
+    <script>
+        // === CONFIGURATION ===
+        // List your symbols and their filenames (match exactly what you uploaded)
+        const SYMBOLS = [
+            { name: 'Sankofa', file: 'sankofa.png', meaning: 'Return and get it' },
+            { name: 'Dwennimmen', file: 'dwennimmen.png', meaning: 'Strength & humility' },
+            { name: 'Gye Nyame', file: 'gyenyame.png', meaning: 'Supremacy of God' },
+            { name: 'Akoma', file: 'akoma.png', meaning: 'Love & patience' },
+            { name: 'Duafe', file: 'duafe.png', meaning: 'Beauty & care' },
+            { name: 'Odo Nyera', file: 'odo-nyera.png', meaning: 'Eternal love' } // adjust filename if needed
+        ];
+
+        // Level definitions (Level 1 only for now)
+        const LEVELS = [
+            { level: 1, rows: 1, symbols: ['Sankofa'], colors: ['black'], targets: 1 }
+        ];
+
+        let currentLevelIndex = 0;
+        let currentTargets = [];           // List of target objects { symbolName, color }
+        let targetsFound = 0;
+        let levelComplete = false;
+        let animationPlaying = true;        // Used to pause rows
+        const rowsArea = document.getElementById('rowsArea');
+        const targetContainer = document.getElementById('targetContainer');
+        const levelDisplay = document.getElementById('levelDisplay');
+        const progressCounter = document.getElementById('progressCounter');
+
+        // === HELPER: Create a symbol image element with data attributes ===
+        function createSymbolImage(symbolName, color = 'black') {
+            const symbol = SYMBOLS.find(s => s.name === symbolName);
+            if (!symbol) return null;
+            
+            const img = document.createElement('img');
+            img.src = `assets/symbols/${symbol.file}`;  // Path to your symbol folder
+            img.alt = symbolName;
+            img.className = 'row-symbol';
+            img.setAttribute('data-symbol', symbolName);
+            img.setAttribute('data-color', color);
+            
+            // Add click handler
+            img.addEventListener('click', symbolClickHandler);
+            return img;
+        }
+
+        // === CLICK HANDLER (game logic) ===
+        function symbolClickHandler(event) {
+            if (levelComplete) return;
+            
+            const img = event.currentTarget;
+            const symbolName = img.dataset.symbol;
+            const color = img.dataset.color;
+            
+            // Check if this symbol-color matches any current target
+            const targetIndex = currentTargets.findIndex(t => t.symbolName === symbolName && t.color === color);
+            
+            if (targetIndex !== -1) {
+                // CORRECT CLICK!
+                playSound(true);
+                
+                // Remove this target from the list
+                currentTargets.splice(targetIndex, 1);
+                targetsFound++;
+                progressCounter.innerText = `${targetsFound} / ${LEVELS[currentLevelIndex].targets}`;
+                
+                // Update target display
+                renderTargets();
+                
+                // If all targets found, complete level
+                if (currentTargets.length === 0) {
+                    levelComplete = true;
+                    pauseAllRows();
+                    setTimeout(() => {
+                        alert('🎉 Level 1 Complete! Well done!');
+                        // For now, just reset level. You'll add progression later.
+                        resetGame();
+                    }, 200);
+                }
+            } else {
+                // WRONG CLICK
+                playSound(false);
+                img.classList.add('shake-animation');
+                setTimeout(() => img.classList.remove('shake-animation'), 300);
+            }
+        }
+
+        // === RENDER TARGETS AT TOP ===
+        function renderTargets() {
+            targetContainer.innerHTML = '';
+            currentTargets.forEach(target => {
+                const symbol = SYMBOLS.find(s => s.name === target.symbolName);
+                if (!symbol) return;
+                
+                const targetDiv = document.createElement('div');
+                targetDiv.className = 'target-item';
+                
+                const img = document.createElement('img');
+                img.src = `assets/symbols/${symbol.file}`;
+                img.alt = target.symbolName;
+                
+                const colorSpan = document.createElement('span');
+                colorSpan.innerText = target.color.toUpperCase();
+                colorSpan.style.backgroundColor = target.color === 'black' ? '#333' : target.color;
+                
+                targetDiv.appendChild(img);
+                targetDiv.appendChild(colorSpan);
+                targetContainer.appendChild(targetDiv);
+            });
+        }
+
+        // === BUILD ROWS FOR CURRENT LEVEL ===
+        function buildLevel(levelIndex) {
+            const level = LEVELS[levelIndex];
+            if (!level) return;
+            
+            rowsArea.innerHTML = ''; // Clear previous rows
+            levelComplete = false;
+            animationPlaying = true;
+            
+            // Set targets for this level
+            currentTargets = [];
+            const targetSymbols = level.symbols;
+            for (let i = 0; i < level.targets; i++) {
+                // For level 1, just use the first symbol with black
+                currentTargets.push({ 
+                    symbolName: targetSymbols[i % targetSymbols.length], 
+                    color: level.colors[i % level.colors.length] 
+                });
+            }
+            targetsFound = 0;
+            progressCounter.innerText = `0 / ${level.targets}`;
+            levelDisplay.innerText = `Level ${level.level}`;
+            renderTargets();
+            
+            // Create rows (Level 1: just one row)
+            for (let r = 0; r < level.rows; r++) {
+                const rowContainer = document.createElement('div');
+                rowContainer.className = 'row-container';
+                
+                const movingRow = document.createElement('div');
+                movingRow.className = 'moving-row';
+                movingRow.id = `row-${r}`;
+                
+                // Populate with symbols (repeat many times for seamless scroll)
+                // Use all 6 symbols randomly, but ensure target symbols appear frequently
+                for (let i = 0; i < 15; i++) { // 15 symbols per row segment
+                    const randomSymbol = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)].name;
+                    const img = createSymbolImage(randomSymbol, 'black');
+                    if (img) movingRow.appendChild(img);
+                }
+                
+                rowContainer.appendChild(movingRow);
+                rowsArea.appendChild(rowContainer);
+                
+                // Apply different directions based on row index (Level1: right->left)
+                if (r % 2 === 0) {
+                    movingRow.style.animation = 'scrollLeft 10s linear infinite';
+                } else {
+                    movingRow.style.animation = 'scrollRight 10s linear infinite';
+                }
+            }
+            
+            // Add keyframes for scrolling if not already present
+            if (!document.getElementById('scrollKeyframes')) {
+                const styleSheet = document.createElement("style");
+                styleSheet.id = 'scrollKeyframes';
+                styleSheet.innerHTML = `
+                    @keyframes scrollLeft {
+                        from { transform: translateX(0); }
+                        to { transform: translateX(-50%); }
+                    }
+                    @keyframes scrollRight {
+                        from { transform: translateX(-50%); }
+                        to { transform: translateX(0); }
+                    }
+                `;
+                document.head.appendChild(styleSheet);
+            }
+        }
+
+        // === PAUSE ALL ROWS ===
+        function pauseAllRows() {
+            document.querySelectorAll('.moving-row').forEach(row => {
+                row.style.animationPlayState = 'paused';
+            });
+            animationPlaying = false;
+        }
+
+        // === RESUME ALL ROWS ===
+        function resumeAllRows() {
+            document.querySelectorAll('.moving-row').forEach(row => {
+                row.style.animationPlayState = 'running';
+            });
+            animationPlaying = true;
+        }
+
+        // === SIMPLE SOUND (using Web Audio API - beep) ===
+        function playSound(isCorrect) {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                
+                if (isCorrect) {
+                    oscillator.frequency.setValueAtTime(800, audioCtx.currentTime); // Higher pitch
+                    gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                } else {
+                    oscillator.frequency.setValueAtTime(300, audioCtx.currentTime); // Lower buzz
+                    gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                }
+                
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 0.1);
+            } catch (e) {
+                // Silently fail if audio not supported
+            }
+        }
+
+        // === RESET GAME (back to level 1) ===
+        window.resetGame = function() {
+            currentLevelIndex = 0;
+            buildLevel(0);
+        };
+
+        // === INITIALIZE GAME ===
+        window.onload = function() {
+            resetGame();
+        };
+    </script>
+</body>
+</html>
