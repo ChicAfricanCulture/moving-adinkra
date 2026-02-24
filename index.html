@@ -1,3 +1,4 @@
+<!-- /index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -33,24 +34,20 @@
     }
 
     .wrap{
-      width: min(760px, 100%);
+      width: min(820px, 100%);
       display:flex;
       flex-direction:column;
       gap: 14px;
     }
 
-    header{
-      display:flex;
-      flex-direction:column;
-      gap: 6px;
-    }
+    header{ display:flex; flex-direction:column; gap: 6px; }
     header h1{
-      font-size: clamp(1.35rem, 2.2vw, 1.7rem);
+      font-size: clamp(1.35rem, 2.2vw, 1.8rem);
       letter-spacing: 0.2px;
-      font-weight: 800;
+      font-weight: 900;
     }
     header p{
-      font-size: clamp(0.95rem, 1.8vw, 1.02rem);
+      font-size: clamp(0.98rem, 1.8vw, 1.08rem);
       color: var(--muted);
       line-height: 1.25;
     }
@@ -80,8 +77,9 @@
       border: 1px solid var(--line);
       padding: 8px 10px;
       border-radius: 999px;
-      font-weight: 800;
-      font-size: 0.95rem;
+      font-weight: 900;
+      font-size: 0.98rem;
+      white-space: nowrap;
     }
 
     button{
@@ -89,13 +87,12 @@
       border: 1px solid var(--line);
       padding: 9px 12px;
       border-radius: 999px;
-      font-weight: 800;
+      font-weight: 900;
       color: var(--ink);
       cursor:pointer;
     }
     button:active{ transform: translateY(1px); }
 
-    /* Targets row (simple, like your reference) */
     .targets{
       display:flex;
       align-items:center;
@@ -111,6 +108,14 @@
       font-weight: 900;
       letter-spacing: 0.2px;
     }
+
+    #targetContainer{
+      display:flex;
+      flex-wrap:wrap;
+      gap: 10px;
+      align-items:center;
+    }
+
     .target-chip{
       display:flex;
       align-items:center;
@@ -119,31 +124,54 @@
       border-radius: 999px;
       border: 1px solid var(--line);
       background: rgba(255,255,255,0.65);
+      position: relative;
     }
+
+    .target-chip.active{
+      outline: 2px solid rgba(36,22,12,0.24);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.10);
+    }
+
+    .target-chip.done{
+      opacity: 0.55;
+      text-decoration: line-through;
+    }
+
     .target-chip img{
-      width: 52px;
-      height: 52px;
+      width: 56px;
+      height: 56px;
       object-fit: contain;
       filter: drop-shadow(0 3px 4px rgba(0,0,0,0.12));
     }
+
     .target-chip .meta{
       display:flex;
       flex-direction:column;
       gap: 2px;
-      min-width: 120px;
+      min-width: 140px;
     }
     .target-chip .name{
       font-weight: 900;
-      font-size: 0.98rem;
+      font-size: 1.02rem;
       line-height: 1.05;
     }
     .target-chip .meaning{
-      font-size: 0.82rem;
+      font-size: 0.84rem;
       color: var(--muted);
       line-height: 1.1;
     }
+    .row-badge{
+      font-weight: 900;
+      font-size: 0.82rem;
+      color: rgba(36,22,12,0.75);
+      background: rgba(36,22,12,0.06);
+      border: 1px solid rgba(36,22,12,0.12);
+      padding: 4px 8px;
+      border-radius: 999px;
+      margin-left: 4px;
+      white-space: nowrap;
+    }
 
-    /* Slot-machine lanes */
     .machine{
       position: relative;
       padding: 14px;
@@ -164,13 +192,16 @@
       margin: 12px 0;
     }
 
-    /* Fade edges to feel like a slot window */
+    .lane.paused{
+      background: rgba(255,255,255,0.80);
+    }
+
     .lane::before,
     .lane::after{
       content:"";
       position:absolute;
       top:0; bottom:0;
-      width: 72px;
+      width: 74px;
       z-index: 2;
       pointer-events:none;
     }
@@ -183,13 +214,12 @@
       background: linear-gradient(to left, rgba(245,231,217,0.95), rgba(245,231,217,0));
     }
 
-    /* Center “window” highlight */
     .window{
       position:absolute;
       left: 50%;
       top: 14px;
       bottom: 14px;
-      width: clamp(160px, 28vw, 240px);
+      width: clamp(170px, 26vw, 250px);
       transform: translateX(-50%);
       border-radius: 18px;
       border: 2px solid rgba(36,22,12,0.22);
@@ -204,12 +234,29 @@
       gap: 14px;
       width: max-content;
       will-change: transform;
-      animation: scroll var(--speed, 12s) linear infinite;
+      animation-duration: var(--speed, 12s);
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+      animation-play-state: running;
+    }
+
+    /* LTR: content moves right (start at -50%, end at 0) */
+    .moving-row.ltr{ animation-name: scroll-ltr; }
+    @keyframes scroll-ltr{
+      from{ transform: translateX(-50%); }
+      to{ transform: translateX(0); }
+    }
+
+    /* RTL: content moves left (start at 0, end at -50%) */
+    .moving-row.rtl{ animation-name: scroll-rtl; }
+    @keyframes scroll-rtl{
+      from{ transform: translateX(0); }
+      to{ transform: translateX(-50%); }
     }
 
     .symbol{
-      width: clamp(78px, 10vw, 98px);
-      height: clamp(78px, 10vw, 98px);
+      width: clamp(84px, 10vw, 106px);
+      height: clamp(84px, 10vw, 106px);
       object-fit: contain;
       cursor: pointer;
       user-select:none;
@@ -228,13 +275,15 @@
       75%{ transform: translateX(-4px); }
     }
 
-    @keyframes scroll{
-      from{ transform: translateX(0); }
-      to{ transform: translateX(-50%); }
-    }
+    /* “Colorizing” filters for grayscale PNGs */
+    .c-bw { filter: drop-shadow(0 4px 6px rgba(0,0,0,0.14)); }
+    .c-red { filter: drop-shadow(0 4px 6px rgba(0,0,0,0.14)) sepia(1) saturate(7) hue-rotate(-10deg); }
+    .c-yellow { filter: drop-shadow(0 4px 6px rgba(0,0,0,0.14)) sepia(1) saturate(7) hue-rotate(20deg); }
+    .c-blue { filter: drop-shadow(0 4px 6px rgba(0,0,0,0.14)) sepia(1) saturate(7) hue-rotate(190deg); }
+    .c-green { filter: drop-shadow(0 4px 6px rgba(0,0,0,0.14)) sepia(1) saturate(7) hue-rotate(95deg); }
 
     .footer-note{
-      font-size: 0.9rem;
+      font-size: 0.92rem;
       color: var(--muted);
       line-height: 1.25;
       padding: 0 2px;
@@ -246,17 +295,22 @@
   <div class="wrap">
     <header>
       <h1>Adinkra Movers</h1>
-      <p>Look closely. Tap the symbol(s) you’re asked to find as they pass through the center window.</p>
+      <p>
+        Tap the correct symbol on the correct row. When you get a row right, it pauses.
+        If time runs out before you finish the level, all rows resume and you try again.
+      </p>
     </header>
 
     <div class="hud">
       <div class="hud-left">
         <span class="pill" id="levelDisplay">Level 1</span>
         <span class="pill" id="progressCounter">0 / 1</span>
+        <span class="pill" id="timerPill">⏱ 0</span>
       </div>
       <div class="hud-right">
         <button id="pauseButton" type="button">⏸ Pause</button>
         <button id="resetButton" type="button">↺ Restart</button>
+        <button id="nextButton" type="button">Next ▶</button>
       </div>
     </div>
 
@@ -271,45 +325,65 @@
     </div>
 
     <div class="footer-note">
-      Tip: if the game looks “small,” that’s mostly symbol size + padding — both are adjustable above.
-      Also: if you see “GitHub” at the top, you’re viewing the file on github.com, not the GitHub Pages link.
+      Levels 1–3 use black &amp; white. Level 4+ introduces colors (red/yellow/blue/green).
     </div>
   </div>
 
   <script>
     /**
-     * Adinkra Movers (slot-style, horizontal)
-     * - Seamless scroll: duplicate sequence, animate to -50%
-     * - Image robustness: onerror fallback tries alternate filenames
+     * Adinkra Movers — row-by-row targets, alternating directions, timeout reset
      */
 
     const SYMBOLS = [
       { name: "Sankofa", file: "Sankofa-egg.png", meaning: "Return and get it" },
-      { name: "Dwennimmen", file: "Dwennimmen.png", meaning: "Strength & humility" }, // ✅ fixed to match your repo list
+      { name: "Dwennimmen", file: "Dwennimmen.png", meaning: "Strength & humility" }, // fixed to match repo
       { name: "Gye Nyame", file: "Gye-Nyame.png", meaning: "Supremacy of God" },
       { name: "Akoma", file: "Akoma-d.png", meaning: "Love & patience" },
       { name: "Duafe", file: "Duafe-beauty.png", meaning: "Beauty & care" },
       { name: "Odo Nyera", file: "love-will.png", meaning: "Eternal love" }
     ];
 
+    const COLORS = ["red", "yellow", "blue", "green"]; // introduced at level 4
+
+    /**
+     * Rules you requested:
+     * - Level 1: 1 row, 1 target (row 1 moves LTR)
+     * - Level 2: 2 rows, 2 targets (row 1 LTR, row 2 RTL)
+     * - Level 3: 3 rows, 3 targets (alternating)
+     * - Level 4: add colors (still 3 rows, but now targets require correct color)
+     * - Level 5-6: more rows + more targets
+     */
     const LEVELS = [
-      // More rows = more “slot machine” feel
-      { level: 1, rows: 3, targets: 1, targetPool: ["Sankofa"], speedSeconds: [12, 10, 14] }
+      { level: 1, rows: 1, useColors: false, stepTimeSeconds: 10, baseSpeedSeconds: 12, symbolsPerRow: 16 },
+      { level: 2, rows: 2, useColors: false, stepTimeSeconds: 10, baseSpeedSeconds: 12, symbolsPerRow: 16 },
+      { level: 3, rows: 3, useColors: false, stepTimeSeconds: 10, baseSpeedSeconds: 11, symbolsPerRow: 16 },
+      { level: 4, rows: 3, useColors: true,  stepTimeSeconds: 9,  baseSpeedSeconds: 10, symbolsPerRow: 16 },
+      { level: 5, rows: 4, useColors: true,  stepTimeSeconds: 8,  baseSpeedSeconds: 9,  symbolsPerRow: 17 },
+      { level: 6, rows: 5, useColors: true,  stepTimeSeconds: 8,  baseSpeedSeconds: 8,  symbolsPerRow: 18 }
     ];
 
     const rowsArea = document.getElementById("rowsArea");
     const targetContainer = document.getElementById("targetContainer");
     const levelDisplay = document.getElementById("levelDisplay");
     const progressCounter = document.getElementById("progressCounter");
+    const timerPill = document.getElementById("timerPill");
     const resetButton = document.getElementById("resetButton");
     const pauseButton = document.getElementById("pauseButton");
+    const nextButton = document.getElementById("nextButton");
 
     let currentLevelIndex = 0;
-    let currentTargets = [];
-    let targetsFound = 0;
-    let levelComplete = false;
-    let paused = false;
 
+    // One target per row: [{rowIndex, symbolName, color, done}]
+    let targets = [];
+    let activeRowIndex = 0;
+    let paused = false;
+    let levelComplete = false;
+
+    // Timeout control
+    let secondsLeft = 0;
+    let timerId = null;
+
+    // Audio reuse
     let audioCtx = null;
 
     function getSymbol(name) {
@@ -322,8 +396,6 @@
 
     function attachImageFallback(img, originalFile) {
       const attempts = new Set();
-
-      // Common “oops” patterns: -a / -b suffixes, case changes, hyphen/underscore
       const candidates = [
         originalFile,
         originalFile.replace(/-a(?=\.)/i, ""),
@@ -344,17 +416,43 @@
         const next = candidates[idx++];
         attempts.add(next);
         img.src = buildSrc(next);
-      }, { once: false });
+      });
     }
 
-    function createSymbolImage(symbolName) {
+    function colorClass(color) {
+      switch (color) {
+        case "red": return "c-red";
+        case "yellow": return "c-yellow";
+        case "blue": return "c-blue";
+        case "green": return "c-green";
+        default: return "c-bw";
+      }
+    }
+
+    function rowDirection(rowIndex) {
+      // Row 0: LTR, Row 1: RTL, Row 2: LTR ...
+      return rowIndex % 2 === 0 ? "ltr" : "rtl";
+    }
+
+    function randomSymbolName() {
+      return SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)].name;
+    }
+
+    function randomColor(useColors) {
+      if (!useColors) return "bw";
+      return COLORS[Math.floor(Math.random() * COLORS.length)];
+    }
+
+    function createSymbolImage({ symbolName, color, rowIndex }) {
       const symbol = getSymbol(symbolName);
       if (!symbol) return null;
 
       const img = document.createElement("img");
-      img.className = "symbol";
+      img.className = `symbol ${colorClass(color)}`;
       img.alt = symbolName;
       img.dataset.symbol = symbolName;
+      img.dataset.color = color;
+      img.dataset.row = String(rowIndex);
       img.src = buildSrc(symbol.file);
 
       attachImageFallback(img, symbol.file);
@@ -366,136 +464,62 @@
     function onSymbolClick(e) {
       if (paused || levelComplete) return;
 
-      const symbolName = e.currentTarget.dataset.symbol;
-      const idx = currentTargets.findIndex(t => t.symbolName === symbolName);
+      const img = e.currentTarget;
+      const rowIndex = Number(img.dataset.row);
+      const symbolName = img.dataset.symbol;
+      const color = img.dataset.color;
 
-      if (idx !== -1) {
-        beep(true);
-        currentTargets.splice(idx, 1);
-        targetsFound += 1;
-        updateHUD();
-        renderTargets();
+      // Must be correct row in sequence
+      if (rowIndex !== activeRowIndex) {
+        wrongFeedback(img);
+        return;
+      }
 
-        if (currentTargets.length === 0) {
+      const target = targets.find(t => t.rowIndex === rowIndex);
+      if (!target || target.done) {
+        wrongFeedback(img);
+        return;
+      }
+
+      const symbolMatch = target.symbolName === symbolName;
+      const colorMatch = target.color === color;
+
+      if (symbolMatch && colorMatch) {
+        correctFeedback();
+
+        target.done = true;
+        pauseRow(rowIndex);
+
+        if (targets.every(t => t.done)) {
           levelComplete = true;
-          setRowsState("paused");
-          setTimeout(() => {
-            alert(`🎉 Level ${LEVELS[currentLevelIndex].level} complete!`);
-            resetGame();
-          }, 150);
+          stopTimer();
+          setAllRowsState("paused");
+          renderTargets();
+          updateHUD();
+          setTimeout(() => alert(`🎉 Level ${LEVELS[currentLevelIndex].level} complete!`), 100);
+          return;
         }
+
+        // Advance to next row target
+        activeRowIndex = nextUndoneRowIndex();
+        renderTargets();
+        updateHUD();
+
+        // Reset timer for the next step
+        restartStepTimer();
       } else {
-        beep(false);
-        e.currentTarget.classList.add("shake");
-        setTimeout(() => e.currentTarget.classList.remove("shake"), 260);
+        wrongFeedback(img);
       }
     }
 
-    function renderTargets() {
-      targetContainer.innerHTML = "";
-
-      currentTargets.forEach(t => {
-        const symbol = getSymbol(t.symbolName);
-        if (!symbol) return;
-
-        const chip = document.createElement("div");
-        chip.className = "target-chip";
-
-        const img = document.createElement("img");
-        img.alt = symbol.name;
-        img.src = buildSrc(symbol.file);
-        attachImageFallback(img, symbol.file);
-
-        const meta = document.createElement("div");
-        meta.className = "meta";
-
-        const name = document.createElement("div");
-        name.className = "name";
-        name.textContent = symbol.name;
-
-        const meaning = document.createElement("div");
-        meaning.className = "meaning";
-        meaning.textContent = symbol.meaning;
-
-        meta.appendChild(name);
-        meta.appendChild(meaning);
-
-        chip.appendChild(img);
-        chip.appendChild(meta);
-        targetContainer.appendChild(chip);
-      });
+    function wrongFeedback(img) {
+      beep(false);
+      img.classList.add("shake");
+      setTimeout(() => img.classList.remove("shake"), 260);
     }
 
-    function updateHUD() {
-      const total = LEVELS[currentLevelIndex].targets;
-      progressCounter.textContent = `${targetsFound} / ${total}`;
-      levelDisplay.textContent = `Level ${LEVELS[currentLevelIndex].level}`;
-    }
-
-    function setRowsState(state) {
-      document.querySelectorAll(".moving-row").forEach(r => {
-        r.style.animationPlayState = state;
-      });
-    }
-
-    function buildLevel(levelIndex) {
-      const level = LEVELS[levelIndex];
-      if (!level) return;
-
-      rowsArea.innerHTML = "";
-      levelComplete = false;
-      paused = false;
-      pauseButton.textContent = "⏸ Pause";
-
-      currentTargets = [];
-      for (let i = 0; i < level.targets; i++) {
-        currentTargets.push({ symbolName: level.targetPool[i % level.targetPool.length] });
-      }
-
-      targetsFound = 0;
-      updateHUD();
-      renderTargets();
-
-      // Build lanes (rows) like a horizontal slot machine
-      for (let r = 0; r < level.rows; r++) {
-        const lane = document.createElement("div");
-        lane.className = "lane";
-
-        const movingRow = document.createElement("div");
-        movingRow.className = "moving-row";
-        const speed = Array.isArray(level.speedSeconds) ? level.speedSeconds[r % level.speedSeconds.length] : level.speedSeconds;
-        movingRow.style.setProperty("--speed", `${speed}s`);
-
-        const baseCount = 16;
-        const names = SYMBOLS.map(s => s.name);
-
-        const base = [];
-        for (let i = 0; i < baseCount; i++) {
-          base.push(names[Math.floor(Math.random() * names.length)]);
-        }
-
-        // Ensure target appears at least once in EACH lane
-        base[Math.floor(Math.random() * base.length)] = level.targetPool[0];
-
-        const seq = base.concat(base); // duplicate for seamless -50%
-
-        seq.forEach(name => {
-          const img = createSymbolImage(name);
-          if (img) movingRow.appendChild(img);
-        });
-
-        lane.appendChild(movingRow);
-        rowsArea.appendChild(lane);
-      }
-
-      setRowsState("running");
-    }
-
-    function togglePause() {
-      if (levelComplete) return;
-      paused = !paused;
-      setRowsState(paused ? "paused" : "running");
-      pauseButton.textContent = paused ? "▶ Resume" : "⏸ Pause";
+    function correctFeedback() {
+      beep(true);
     }
 
     function beep(correct) {
@@ -521,14 +545,252 @@
       } catch (_) {}
     }
 
+    function buildTargetsForLevel(level) {
+      // One target per row.
+      // Level 1-3: BW only
+      // Level 4+: colored targets
+      const chosen = [];
+
+      // Prefer variety: shuffle symbol list, but if rows > symbols, wrap.
+      const symbolNames = SYMBOLS.map(s => s.name);
+      for (let i = symbolNames.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [symbolNames[i], symbolNames[j]] = [symbolNames[j], symbolNames[i]];
+      }
+
+      for (let r = 0; r < level.rows; r++) {
+        const symbolName = symbolNames[r % symbolNames.length];
+        const color = level.useColors ? COLORS[r % COLORS.length] : "bw";
+        chosen.push({ rowIndex: r, symbolName, color, done: false });
+      }
+
+      return chosen;
+    }
+
+    function buildRowContent(level, rowIndex, rowTarget) {
+      // Build a base sequence, insert the target, then duplicate for seamless scroll.
+      const base = [];
+      const count = level.symbolsPerRow;
+
+      for (let i = 0; i < count; i++) {
+        base.push({
+          symbolName: randomSymbolName(),
+          color: randomColor(level.useColors),
+          rowIndex
+        });
+      }
+
+      // Ensure the target exists at least twice per row (feels fair on fast speeds)
+      const insertAt1 = Math.floor(Math.random() * base.length);
+      const insertAt2 = Math.floor(Math.random() * base.length);
+      base[insertAt1] = { symbolName: rowTarget.symbolName, color: rowTarget.color, rowIndex };
+      base[insertAt2] = { symbolName: rowTarget.symbolName, color: rowTarget.color, rowIndex };
+
+      return base.concat(base);
+    }
+
+    function renderTargets() {
+      targetContainer.innerHTML = "";
+
+      targets.forEach(t => {
+        const symbol = getSymbol(t.symbolName);
+        if (!symbol) return;
+
+        const chip = document.createElement("div");
+        chip.className = "target-chip";
+        if (t.rowIndex === activeRowIndex && !t.done && !levelComplete) chip.classList.add("active");
+        if (t.done) chip.classList.add("done");
+
+        const img = document.createElement("img");
+        img.alt = symbol.name;
+        img.src = buildSrc(symbol.file);
+        img.classList.add(colorClass(t.color));
+        attachImageFallback(img, symbol.file);
+
+        const meta = document.createElement("div");
+        meta.className = "meta";
+
+        const name = document.createElement("div");
+        name.className = "name";
+        name.textContent = symbol.name;
+
+        const meaning = document.createElement("div");
+        meaning.className = "meaning";
+        meaning.textContent = symbol.meaning;
+
+        const badge = document.createElement("span");
+        badge.className = "row-badge";
+        badge.textContent = `Row ${t.rowIndex + 1}${t.color !== "bw" ? ` • ${t.color.toUpperCase()}` : ""}`;
+
+        meta.appendChild(name);
+        meta.appendChild(meaning);
+
+        chip.appendChild(img);
+        chip.appendChild(meta);
+        chip.appendChild(badge);
+        targetContainer.appendChild(chip);
+      });
+    }
+
+    function updateHUD() {
+      const total = targets.length;
+      const doneCount = targets.filter(t => t.done).length;
+
+      const level = LEVELS[currentLevelIndex].level;
+      levelDisplay.textContent = `Level ${level}`;
+      progressCounter.textContent = `${doneCount} / ${total}`;
+      timerPill.textContent = `⏱ ${secondsLeft}`;
+    }
+
+    function pauseRow(rowIndex) {
+      const row = document.querySelector(`.moving-row[data-row="${rowIndex}"]`);
+      const lane = document.querySelector(`.lane[data-row="${rowIndex}"]`);
+      if (row) row.style.animationPlayState = "paused";
+      if (lane) lane.classList.add("paused");
+    }
+
+    function resumeRow(rowIndex) {
+      const row = document.querySelector(`.moving-row[data-row="${rowIndex}"]`);
+      const lane = document.querySelector(`.lane[data-row="${rowIndex}"]`);
+      if (row) row.style.animationPlayState = "running";
+      if (lane) lane.classList.remove("paused");
+    }
+
+    function setAllRowsState(state) {
+      document.querySelectorAll(".moving-row").forEach(r => r.style.animationPlayState = state);
+      document.querySelectorAll(".lane").forEach(l => {
+        if (state === "paused") l.classList.add("paused");
+        else l.classList.remove("paused");
+      });
+    }
+
+    function nextUndoneRowIndex() {
+      const next = targets.find(t => !t.done);
+      return next ? next.rowIndex : 0;
+    }
+
+    function stopTimer() {
+      if (timerId) clearInterval(timerId);
+      timerId = null;
+    }
+
+    function restartStepTimer() {
+      stopTimer();
+      const level = LEVELS[currentLevelIndex];
+      secondsLeft = level.stepTimeSeconds;
+      updateHUD();
+
+      timerId = setInterval(() => {
+        if (paused || levelComplete) return;
+        secondsLeft -= 1;
+        if (secondsLeft <= 0) {
+          secondsLeft = 0;
+          updateHUD();
+          onTimeoutReset();
+          return;
+        }
+        updateHUD();
+      }, 1000);
+    }
+
+    function onTimeoutReset() {
+      stopTimer();
+
+      // You said: if they don't find it in time, then all rows begin moving again.
+      // We also restart the attempt so the player has to re-complete the level.
+      setAllRowsState("running");
+      targets.forEach(t => (t.done = false));
+      activeRowIndex = 0;
+      levelComplete = false;
+
+      renderTargets();
+      updateHUD();
+
+      // Restart timer for first row
+      restartStepTimer();
+    }
+
+    function buildLevel(levelIndex) {
+      const level = LEVELS[levelIndex];
+      if (!level) return;
+
+      rowsArea.innerHTML = "";
+      paused = false;
+      levelComplete = false;
+
+      // Build targets and reset active row
+      targets = buildTargetsForLevel(level);
+      activeRowIndex = 0;
+
+      // Build rows
+      for (let r = 0; r < level.rows; r++) {
+        const lane = document.createElement("div");
+        lane.className = "lane";
+        lane.dataset.row = String(r);
+
+        const movingRow = document.createElement("div");
+        movingRow.className = `moving-row ${rowDirection(r)}`;
+        movingRow.dataset.row = String(r);
+
+        // Speed ramps a little per row for feel
+        const speed = Math.max(6, level.baseSpeedSeconds - (r % 3));
+        movingRow.style.setProperty("--speed", `${speed}s`);
+
+        const rowTarget = targets.find(t => t.rowIndex === r);
+        const items = buildRowContent(level, r, rowTarget);
+
+        items.forEach(item => {
+          const img = createSymbolImage(item);
+          if (img) movingRow.appendChild(img);
+        });
+
+        lane.appendChild(movingRow);
+        rowsArea.appendChild(lane);
+      }
+
+      renderTargets();
+      secondsLeft = level.stepTimeSeconds;
+      updateHUD();
+      restartStepTimer();
+      setAllRowsState("running");
+    }
+
+    function togglePause() {
+      if (levelComplete) return;
+      paused = !paused;
+      if (paused) {
+        setAllRowsState("paused");
+        pauseButton.textContent = "▶ Resume";
+      } else {
+        // Resume ONLY rows not already completed
+        targets.forEach(t => {
+          if (t.done) pauseRow(t.rowIndex);
+          else resumeRow(t.rowIndex);
+        });
+        pauseButton.textContent = "⏸ Pause";
+      }
+    }
+
     function resetGame() {
-      currentLevelIndex = 0;
+      stopTimer();
       buildLevel(currentLevelIndex);
     }
 
-    resetButton.addEventListener("click", resetGame);
+    function nextLevel() {
+      stopTimer();
+      currentLevelIndex = Math.min(currentLevelIndex + 1, LEVELS.length - 1);
+      buildLevel(currentLevelIndex);
+    }
+
+    resetButton.addEventListener("click", () => {
+      currentLevelIndex = 0;
+      resetGame();
+    });
+
     pauseButton.addEventListener("click", togglePause);
-    window.onload = resetGame;
+    nextButton.addEventListener("click", nextLevel);
+
+    window.onload = () => buildLevel(currentLevelIndex);
   </script>
 </body>
 </html>
