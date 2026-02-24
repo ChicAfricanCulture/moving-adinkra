@@ -290,7 +290,14 @@
       white-space: nowrap;
       flex: 0 0 auto;
     }
-
+/* ✅ FIX: Row pill text readable (no white-on-white) */
+.target-tag .pill{
+  color: var(--ink) !important;
+  text-shadow: none;
+}.target-tag .pill{
+  background: rgba(255,255,255,0.92);
+  border-color: rgba(31,20,14,0.22);
+}
     .color-dot {
       width: 12px;
       height: 12px;
