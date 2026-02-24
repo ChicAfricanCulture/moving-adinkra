@@ -352,12 +352,28 @@
       75%{ transform: translateX(-4px); }
     }
 
-    /* Colorizing filters for grayscale PNGs */
-    .c-bw { filter: drop-shadow(0 2px 3px rgba(0,0,0,0.10)); }
-    .c-red { filter: drop-shadow(0 2px 3px rgba(0,0,0,0.10)) sepia(1) saturate(7) hue-rotate(-10deg); }
-    .c-yellow { filter: drop-shadow(0 2px 3px rgba(0,0,0,0.10)) sepia(1) saturate(7) hue-rotate(20deg); }
-    .c-blue { filter: drop-shadow(0 2px 3px rgba(0,0,0,0.10)) sepia(1) saturate(7) hue-rotate(190deg); }
-    .c-green { filter: drop-shadow(0 2px 3px rgba(0,0,0,0.10)) sepia(1) saturate(7) hue-rotate(95deg); }
+ /* Keep drop-shadow at the END of the filter chain */
+.c-bw {
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.10));
+}
+
+/* “Tint” a black icon into colors */
+.c-red {
+  filter: brightness(0) saturate(100%) invert(18%) sepia(96%) saturate(7472%) hue-rotate(355deg) brightness(98%) contrast(109%)
+          drop-shadow(0 2px 3px rgba(0,0,0,0.10));
+}
+.c-yellow {
+  filter: brightness(0) saturate(100%) invert(83%) sepia(58%) saturate(1288%) hue-rotate(356deg) brightness(102%) contrast(104%)
+          drop-shadow(0 2px 3px rgba(0,0,0,0.10));
+}
+.c-blue {
+  filter: brightness(0) saturate(100%) invert(24%) sepia(95%) saturate(2280%) hue-rotate(199deg) brightness(98%) contrast(110%)
+          drop-shadow(0 2px 3px rgba(0,0,0,0.10));
+}
+.c-green {
+  filter: brightness(0) saturate(100%) invert(47%) sepia(76%) saturate(632%) hue-rotate(86deg) brightness(96%) contrast(108%)
+          drop-shadow(0 2px 3px rgba(0,0,0,0.10));
+}
 
     /* Small “toast” message instead of popups */
     .toast{
