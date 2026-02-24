@@ -10,19 +10,33 @@
 
   <style>
     :root{
-      --bg: #f5e7d9;
-      --ink: #24160c;
-      --muted: rgba(36, 22, 12, 0.70);
-      --line: rgba(36, 22, 12, 0.16);
-      --panel: rgba(255, 255, 255, 0.55);
-      --panel-2: rgba(255, 255, 255, 0.35);
-      --shadow: 0 14px 30px rgba(0,0,0,0.10);
-      --radius: 22px;
+      --bg: #f2e4d6;
+      --ink: #1f140e;
+      --muted: rgba(31, 20, 14, 0.70);
 
-      /* Responsive sizing driven by rows (set in JS) */
+      --panel: #fbf6ef;
+      --frame: #2a1a10;
+      --line: rgba(31,20,14,0.18);
+
+      --accent: #d2a24c;
+      --good: #2a9d58;
+      --bad: #d64545;
+
+      --shadow: 0 14px 30px rgba(0,0,0,0.14);
+
+      /* Crisp geometry */
+      --r0: 0px;
+      --r1: 6px;
+      --r2: 10px;
+
+      /* Responsive sizing set by JS */
       --lanePadY: 10px;
       --symbolMin: 86px;
       --symbolMax: 112px;
+      --laneGap: 10px;
+
+      /* Slot window width */
+      --windowW: clamp(170px, 26vw, 250px);
     }
 
     *{ box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color: transparent; }
@@ -34,24 +48,34 @@
       display:flex;
       justify-content:center;
       align-items:center;
-      padding: 18px;
+      padding: 16px;
     }
 
     .wrap{
-      width: min(820px, 100%);
+      width: min(860px, 100%);
       display:flex;
       flex-direction:column;
-      gap: 14px;
+      gap: 12px;
     }
 
-    header{ display:flex; flex-direction:column; gap: 6px; }
+    header{
+      display:flex;
+      flex-direction:column;
+      gap: 6px;
+      padding: 12px 12px;
+      background: var(--panel);
+      border: 2px solid var(--frame);
+      border-radius: var(--r1);
+      box-shadow: var(--shadow);
+    }
     header h1{
-      font-size: clamp(1.35rem, 2.2vw, 1.8rem);
+      font-size: clamp(1.25rem, 2.1vw, 1.7rem);
       letter-spacing: 0.2px;
       font-weight: 900;
+      text-transform: uppercase;
     }
     header p{
-      font-size: clamp(0.98rem, 1.8vw, 1.08rem);
+      font-size: clamp(0.95rem, 1.7vw, 1.05rem);
       color: var(--muted);
       line-height: 1.25;
     }
@@ -59,61 +83,76 @@
     .hud{
       display:flex;
       flex-wrap:wrap;
-      gap: 10px 12px;
+      gap: 8px 10px;
       align-items:center;
       justify-content:space-between;
       padding: 10px 12px;
       background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
+      border: 2px solid var(--frame);
+      border-radius: var(--r1);
       box-shadow: var(--shadow);
     }
 
     .hud-left, .hud-right{
       display:flex;
-      gap: 10px;
+      gap: 8px;
       align-items:center;
       flex-wrap: wrap;
     }
 
     .pill{
-      background: var(--panel-2);
+      background: #fff;
       border: 1px solid var(--line);
       padding: 8px 10px;
-      border-radius: 999px;
+      border-radius: var(--r0);
       font-weight: 900;
       font-size: 0.98rem;
       white-space: nowrap;
+      letter-spacing: 0.2px;
+    }
+    .pill.timer{
+      border-color: rgba(31,20,14,0.28);
     }
 
     button{
-      background: transparent;
+      background: #fff;
       border: 1px solid var(--line);
       padding: 9px 12px;
-      border-radius: 999px;
+      border-radius: var(--r0);
       font-weight: 900;
       color: var(--ink);
       cursor:pointer;
+      letter-spacing: 0.2px;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+    }
+    button.primary{
+      border-color: rgba(31,20,14,0.34);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.08);
     }
     button:active{ transform: translateY(1px); }
 
     .targets{
       display:flex;
       align-items:center;
-      gap: 12px;
+      gap: 10px;
       flex-wrap:wrap;
       padding: 10px 12px;
       background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
+      border: 2px solid var(--frame);
+      border-radius: var(--r1);
       box-shadow: var(--shadow);
     }
-    .targets strong{ font-weight: 900; letter-spacing: 0.2px; }
+    .targets strong{
+      font-weight: 900;
+      letter-spacing: 0.2px;
+      text-transform: uppercase;
+    }
 
     #targetContainer{
       display:flex;
       flex-wrap:wrap;
-      gap: 10px;
+      gap: 8px;
       align-items:center;
     }
 
@@ -121,53 +160,69 @@
       display:flex;
       align-items:center;
       gap: 10px;
-      padding: 8px 12px;
-      border-radius: 999px;
+      padding: 8px 10px;
+      border-radius: var(--r0);
       border: 1px solid var(--line);
-      background: rgba(255,255,255,0.65);
+      background: #fff;
       position: relative;
+      min-width: 260px;
     }
-
     .target-chip.active{
-      outline: 2px solid rgba(36,22,12,0.24);
-      box-shadow: 0 8px 18px rgba(0,0,0,0.10);
+      outline: 2px solid rgba(210,162,76,0.65);
+      outline-offset: 2px;
     }
-
-    .target-chip.done{ opacity: 0.55; text-decoration: line-through; }
-
+    .target-chip.done{
+      opacity: 0.55;
+      filter: grayscale(0.1);
+    }
     .target-chip img{
-      width: 56px;
-      height: 56px;
+      width: 54px;
+      height: 54px;
       object-fit: contain;
-      filter: drop-shadow(0 3px 4px rgba(0,0,0,0.12));
     }
-
     .target-chip .meta{
       display:flex;
       flex-direction:column;
       gap: 2px;
-      min-width: 140px;
+      flex: 1;
+      min-width: 0;
     }
-    .target-chip .name{ font-weight: 900; font-size: 1.02rem; line-height: 1.05; }
-    .target-chip .meaning{ font-size: 0.84rem; color: var(--muted); line-height: 1.1; }
-    .row-badge{
+    .target-chip .name{
+      font-weight: 900;
+      font-size: 1.0rem;
+      line-height: 1.05;
+      text-transform: uppercase;
+      letter-spacing: 0.2px;
+    }
+    .target-chip .meaning{
+      font-size: 0.84rem;
+      color: var(--muted);
+      line-height: 1.1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .badge{
       font-weight: 900;
       font-size: 0.82rem;
-      color: rgba(36,22,12,0.75);
-      background: rgba(36,22,12,0.06);
-      border: 1px solid rgba(36,22,12,0.12);
-      padding: 4px 8px;
-      border-radius: 999px;
-      margin-left: 4px;
+      border: 1px solid var(--line);
+      padding: 6px 8px;
+      background: #fff;
+      border-radius: var(--r0);
+      text-transform: uppercase;
+      letter-spacing: 0.2px;
       white-space: nowrap;
+    }
+    .badge.color{
+      border-color: rgba(31,20,14,0.28);
     }
 
     .machine{
       position: relative;
-      padding: 14px;
-      background: rgba(255,255,255,0.35);
-      border: 1px solid var(--line);
-      border-radius: calc(var(--radius) + 8px);
+      padding: 12px;
+      background: var(--panel);
+      border: 2px solid var(--frame);
+      border-radius: var(--r1);
       box-shadow: var(--shadow);
       overflow:hidden;
     }
@@ -175,46 +230,59 @@
     .lane{
       position: relative;
       overflow: hidden;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,0.55);
+      border-radius: var(--r0);
+      border: 2px solid rgba(31,20,14,0.18);
+      background: #fff;
       padding: var(--lanePadY) 0;
-      margin: 12px 0;
+      margin: var(--laneGap) 0;
+    }
+    .lane.paused{
+      border-color: rgba(31,20,14,0.35);
+      background: #fffdf8;
+    }
+    .lane.correctFlash{
+      border-color: rgba(42,157,88,0.9);
+      box-shadow: inset 0 0 0 2px rgba(42,157,88,0.22);
+    }
+    .lane.wrongFlash{
+      border-color: rgba(214,69,69,0.9);
+      box-shadow: inset 0 0 0 2px rgba(214,69,69,0.22);
     }
 
-    .lane.paused{ background: rgba(255,255,255,0.80); }
-
+    /* Fade edges for a slot feel, but crisp */
     .lane::before,
     .lane::after{
       content:"";
       position:absolute;
       top:0; bottom:0;
-      width: 74px;
+      width: 70px;
       z-index: 2;
       pointer-events:none;
     }
     .lane::before{
       left:0;
-      background: linear-gradient(to right, rgba(245,231,217,0.95), rgba(245,231,217,0));
+      background: linear-gradient(to right, rgba(242,228,214,0.98), rgba(242,228,214,0));
     }
     .lane::after{
       right:0;
-      background: linear-gradient(to left, rgba(245,231,217,0.95), rgba(245,231,217,0));
+      background: linear-gradient(to left, rgba(242,228,214,0.98), rgba(242,228,214,0));
     }
 
-    /* The “slot window” */
+    /* Center window — crisp frame */
     .window{
       position:absolute;
       left: 50%;
-      top: 14px;
-      bottom: 14px;
-      width: clamp(170px, 26vw, 250px);
+      top: 12px;
+      bottom: 12px;
+      width: var(--windowW);
       transform: translateX(-50%);
-      border-radius: 18px;
-      border: 2px solid rgba(36,22,12,0.22);
-      box-shadow: inset 0 0 0 2px rgba(255,255,255,0.35);
+      border-radius: var(--r0);
+      border: 3px solid rgba(31,20,14,0.35);
+      box-shadow:
+        inset 0 0 0 2px rgba(255,255,255,0.65),
+        0 10px 18px rgba(0,0,0,0.12);
       pointer-events:none;
-      z-index: 3;
+      z-index: 4;
     }
 
     .moving-row{
@@ -228,13 +296,11 @@
       animation-iteration-count: infinite;
       animation-play-state: running;
     }
-
     .moving-row.ltr{ animation-name: scroll-ltr; }
     @keyframes scroll-ltr{
       from{ transform: translateX(-50%); }
       to{ transform: translateX(0); }
     }
-
     .moving-row.rtl{ animation-name: scroll-rtl; }
     @keyframes scroll-rtl{
       from{ transform: translateX(0); }
@@ -250,8 +316,7 @@
       transform: translateZ(0);
       transition: transform 80ms ease;
       z-index: 1;
-      /* keep effects lighter for low-end devices */
-      filter: drop-shadow(0 3px 4px rgba(0,0,0,0.12));
+      filter: drop-shadow(0 2px 3px rgba(0,0,0,0.12));
     }
     .symbol:active{ transform: scale(0.92); }
 
@@ -263,18 +328,52 @@
       75%{ transform: translateX(-4px); }
     }
 
-    /* “Colorizing” filters for grayscale PNGs */
-    .c-bw { filter: drop-shadow(0 3px 4px rgba(0,0,0,0.12)); }
-    .c-red { filter: drop-shadow(0 3px 4px rgba(0,0,0,0.12)) sepia(1) saturate(7) hue-rotate(-10deg); }
-    .c-yellow { filter: drop-shadow(0 3px 4px rgba(0,0,0,0.12)) sepia(1) saturate(7) hue-rotate(20deg); }
-    .c-blue { filter: drop-shadow(0 3px 4px rgba(0,0,0,0.12)) sepia(1) saturate(7) hue-rotate(190deg); }
-    .c-green { filter: drop-shadow(0 3px 4px rgba(0,0,0,0.12)) sepia(1) saturate(7) hue-rotate(95deg); }
+    /* Colorizing filters for grayscale PNGs */
+    .c-bw { filter: drop-shadow(0 2px 3px rgba(0,0,0,0.12)); }
+    .c-red { filter: drop-shadow(0 2px 3px rgba(0,0,0,0.12)) sepia(1) saturate(7) hue-rotate(-10deg); }
+    .c-yellow { filter: drop-shadow(0 2px 3px rgba(0,0,0,0.12)) sepia(1) saturate(7) hue-rotate(20deg); }
+    .c-blue { filter: drop-shadow(0 2px 3px rgba(0,0,0,0.12)) sepia(1) saturate(7) hue-rotate(190deg); }
+    .c-green { filter: drop-shadow(0 2px 3px rgba(0,0,0,0.12)) sepia(1) saturate(7) hue-rotate(95deg); }
 
-    .footer-note{
-      font-size: 0.92rem;
+    /* Overlay for clear state changes */
+    .overlay{
+      position: fixed;
+      inset: 0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      background: rgba(31,20,14,0.55);
+      z-index: 999;
+      padding: 16px;
+    }
+    .overlay.show{ display:flex; }
+    .overlay-card{
+      width: min(560px, 100%);
+      background: #fff;
+      border: 3px solid var(--frame);
+      border-radius: var(--r0);
+      box-shadow: var(--shadow);
+      padding: 18px;
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+    }
+    .overlay-card h2{
+      font-weight: 1000;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      font-size: 1.1rem;
+    }
+    .overlay-card p{
       color: var(--muted);
       line-height: 1.25;
-      padding: 0 2px;
+    }
+    .overlay-actions{
+      display:flex;
+      gap: 10px;
+      justify-content:flex-end;
+      flex-wrap: wrap;
+      margin-top: 6px;
     }
 
     @media (prefers-reduced-motion: reduce){
@@ -288,8 +387,8 @@
     <header>
       <h1>Adinkra Movers</h1>
       <p>
-        Tap the correct symbol on the correct row — but it only counts if it’s inside the center window.
-        Get a row right and it pauses. Run out of time and the level restarts.
+        Tap the correct symbol on the correct row — it only counts inside the center window.
+        Each correct row pauses. Timer is per level.
       </p>
     </header>
 
@@ -297,17 +396,19 @@
       <div class="hud-left">
         <span class="pill" id="levelDisplay">Level 1</span>
         <span class="pill" id="progressCounter">0 / 1</span>
-        <span class="pill" id="timerPill">⏱ 0</span>
+        <span class="pill timer" id="timerPill">TIME: 0</span>
+        <span class="pill" id="modePill">MODE: NORMAL</span>
       </div>
       <div class="hud-right">
-        <button id="pauseButton" type="button">⏸ Pause</button>
-        <button id="resetButton" type="button">↺ Restart</button>
-        <button id="nextButton" type="button">Next ▶</button>
+        <button class="primary" id="modeButton" type="button">Toggle Mode</button>
+        <button id="pauseButton" type="button">Pause</button>
+        <button id="resetButton" type="button">Restart</button>
+        <button class="primary" id="nextButton" type="button">Next</button>
       </div>
     </div>
 
     <div class="targets">
-      <strong>Find:</strong>
+      <strong>Find</strong>
       <div id="targetContainer"></div>
     </div>
 
@@ -315,15 +416,26 @@
       <div class="window" id="slotWindow" aria-hidden="true"></div>
       <div id="rowsArea"></div>
     </div>
+  </div>
 
-    <div class="footer-note">
-      Mobile-first: max 4 rows. Levels 1–3 are black &amp; white. Level 4+ introduces colors.
+  <div class="overlay" id="overlay">
+    <div class="overlay-card">
+      <h2 id="overlayTitle">Title</h2>
+      <p id="overlayText">Message</p>
+      <div class="overlay-actions">
+        <button id="overlayRestart" class="primary" type="button">Try Again</button>
+        <button id="overlayClose" type="button">Close</button>
+      </div>
     </div>
   </div>
 
   <script>
     /**
-     * Adinkra Movers — capped at 4 rows + center-window rule
+     * Adinkra Movers
+     * - Global per-level timer
+     * - Mode toggle: Normal (any order) vs Hard (in order)
+     * - Crisp rectangular UI
+     * - Unambiguous feedback: lane flash + overlay states
      */
 
     const SYMBOLS = [
@@ -337,14 +449,14 @@
 
     const COLORS = ["red", "yellow", "blue", "green"];
 
-    // ✅ Capped at 4 rows, difficulty increases via speed + timer + colors
+    // Max 4 rows; difficulty scales with speed + timer + colors.
     const LEVELS = [
-      { level: 1, rows: 1, useColors: false, stepTimeSeconds: 10, baseSpeedSeconds: 12, symbolsPerRow: 14 },
-      { level: 2, rows: 2, useColors: false, stepTimeSeconds: 10, baseSpeedSeconds: 12, symbolsPerRow: 14 },
-      { level: 3, rows: 3, useColors: false, stepTimeSeconds: 9,  baseSpeedSeconds: 11, symbolsPerRow: 15 },
-      { level: 4, rows: 3, useColors: true,  stepTimeSeconds: 9,  baseSpeedSeconds: 10, symbolsPerRow: 15 },
-      { level: 5, rows: 4, useColors: true,  stepTimeSeconds: 8,  baseSpeedSeconds: 9,  symbolsPerRow: 16 },
-      { level: 6, rows: 4, useColors: true,  stepTimeSeconds: 7,  baseSpeedSeconds: 8,  symbolsPerRow: 16 }
+      { level: 1, rows: 1, useColors: false, levelTimeSeconds: 16, baseSpeedSeconds: 12, symbolsPerRow: 14 },
+      { level: 2, rows: 2, useColors: false, levelTimeSeconds: 20, baseSpeedSeconds: 12, symbolsPerRow: 14 },
+      { level: 3, rows: 3, useColors: false, levelTimeSeconds: 22, baseSpeedSeconds: 11, symbolsPerRow: 15 },
+      { level: 4, rows: 3, useColors: true,  levelTimeSeconds: 22, baseSpeedSeconds: 10, symbolsPerRow: 15 },
+      { level: 5, rows: 4, useColors: true,  levelTimeSeconds: 20, baseSpeedSeconds: 9,  symbolsPerRow: 16 },
+      { level: 6, rows: 4, useColors: true,  levelTimeSeconds: 18, baseSpeedSeconds: 8,  symbolsPerRow: 16 }
     ];
 
     const rowsArea = document.getElementById("rowsArea");
@@ -352,23 +464,43 @@
     const levelDisplay = document.getElementById("levelDisplay");
     const progressCounter = document.getElementById("progressCounter");
     const timerPill = document.getElementById("timerPill");
+    const modePill = document.getElementById("modePill");
+
     const resetButton = document.getElementById("resetButton");
     const pauseButton = document.getElementById("pauseButton");
     const nextButton = document.getElementById("nextButton");
+    const modeButton = document.getElementById("modeButton");
+
     const slotWindow = document.getElementById("slotWindow");
+
+    const overlay = document.getElementById("overlay");
+    const overlayTitle = document.getElementById("overlayTitle");
+    const overlayText = document.getElementById("overlayText");
+    const overlayRestart = document.getElementById("overlayRestart");
+    const overlayClose = document.getElementById("overlayClose");
+
+    const MODES = { NORMAL: "NORMAL", HARD: "HARD" };
 
     let currentLevelIndex = 0;
 
     // One target per row: [{rowIndex, symbolName, color, done}]
     let targets = [];
+
+    // For HARD mode ordering
     let activeRowIndex = 0;
+
     let paused = false;
     let levelComplete = false;
 
+    // Global timer
     let secondsLeft = 0;
     let timerId = null;
 
+    // Audio reuse
     let audioCtx = null;
+
+    // Mode
+    let mode = MODES.NORMAL;
 
     function applyResponsiveSizing(levelRows) {
       const root = document.documentElement.style;
@@ -377,15 +509,18 @@
         root.setProperty("--lanePadY", "10px");
         root.setProperty("--symbolMin", "86px");
         root.setProperty("--symbolMax", "112px");
+        root.setProperty("--laneGap", "10px");
       } else if (levelRows === 3) {
         root.setProperty("--lanePadY", "9px");
         root.setProperty("--symbolMin", "78px");
         root.setProperty("--symbolMax", "104px");
+        root.setProperty("--laneGap", "10px");
       } else {
-        // 4 rows (max): still comfortable on common Android screens
+        // 4 rows (max): tuned for common Android viewports
         root.setProperty("--lanePadY", "8px");
         root.setProperty("--symbolMin", "68px");
         root.setProperty("--symbolMax", "92px");
+        root.setProperty("--laneGap", "9px");
       }
     }
 
@@ -448,12 +583,28 @@
     function isInsideSlotWindow(imgEl) {
       const w = slotWindow.getBoundingClientRect();
       const r = imgEl.getBoundingClientRect();
-
-      // Use the image center point
       const cx = r.left + (r.width / 2);
       const cy = r.top + (r.height / 2);
-
       return cx >= w.left && cx <= w.right && cy >= w.top && cy <= w.bottom;
+    }
+
+    function vibrate(ms) {
+      try {
+        if ("vibrate" in navigator) navigator.vibrate(ms);
+      } catch (_) {}
+    }
+
+    function laneEl(rowIndex) {
+      return document.querySelector(`.lane[data-row="${rowIndex}"]`);
+    }
+
+    function flashLane(rowIndex, kind) {
+      const lane = laneEl(rowIndex);
+      if (!lane) return;
+
+      const cls = kind === "good" ? "correctFlash" : "wrongFlash";
+      lane.classList.add(cls);
+      setTimeout(() => lane.classList.remove(cls), 220);
     }
 
     function createSymbolImage({ symbolName, color, rowIndex }) {
@@ -479,9 +630,8 @@
 
       const img = e.currentTarget;
 
-      // ✅ Slot-machine rule: must be inside the center window
       if (!isInsideSlotWindow(img)) {
-        wrongFeedback(img);
+        wrongFeedback(img, Number(img.dataset.row));
         return;
       }
 
@@ -489,54 +639,56 @@
       const symbolName = img.dataset.symbol;
       const color = img.dataset.color;
 
-      // Must be correct row in sequence
-      if (rowIndex !== activeRowIndex) {
-        wrongFeedback(img);
+      // HARD mode requires solving rows in order
+      if (mode === MODES.HARD && rowIndex !== activeRowIndex) {
+        wrongFeedback(img, rowIndex);
         return;
       }
 
       const target = targets.find(t => t.rowIndex === rowIndex);
       if (!target || target.done) {
-        wrongFeedback(img);
+        wrongFeedback(img, rowIndex);
         return;
       }
 
       const symbolMatch = target.symbolName === symbolName;
       const colorMatch = target.color === color;
 
-      if (symbolMatch && colorMatch) {
-        correctFeedback();
-
-        target.done = true;
-        pauseRow(rowIndex);
-
-        if (targets.every(t => t.done)) {
-          levelComplete = true;
-          stopTimer();
-          setAllRowsState("paused");
-          renderTargets();
-          updateHUD();
-          setTimeout(() => alert(`🎉 Level ${LEVELS[currentLevelIndex].level} complete!`), 100);
-          return;
-        }
-
-        activeRowIndex = nextUndoneRowIndex();
-        renderTargets();
-        updateHUD();
-        restartStepTimer();
-      } else {
-        wrongFeedback(img);
+      if (!symbolMatch || !colorMatch) {
+        wrongFeedback(img, rowIndex);
+        return;
       }
+
+      // Correct
+      correctFeedback(rowIndex);
+      target.done = true;
+      pauseRow(rowIndex);
+
+      if (mode === MODES.HARD) {
+        activeRowIndex = nextUndoneRowIndex();
+      }
+
+      if (targets.every(t => t.done)) {
+        onLevelWin();
+        return;
+      }
+
+      renderTargets();
+      updateHUD();
     }
 
-    function wrongFeedback(img) {
+    function wrongFeedback(img, rowIndex) {
       beep(false);
+      vibrate(30);
+      flashLane(rowIndex, "bad");
       img.classList.add("shake");
       setTimeout(() => img.classList.remove("shake"), 260);
     }
 
-    function correctFeedback() {
+    function correctFeedback(rowIndex) {
       beep(true);
+      vibrate(18);
+      flashLane(rowIndex, "good");
     }
 
     function beep(correct) {
@@ -548,17 +700,17 @@
         const gain = audioCtx.createGain();
 
         osc.type = "sine";
-        osc.frequency.setValueAtTime(correct ? 820 : 260, t);
+        osc.frequency.setValueAtTime(correct ? 860 : 240, t);
 
         gain.gain.setValueAtTime(0.0001, t);
-        gain.gain.exponentialRampToValueAtTime(0.07, t + 0.01);
-        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.12);
+        gain.gain.exponentialRampToValueAtTime(0.06, t + 0.01);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.11);
 
         osc.connect(gain);
         gain.connect(audioCtx.destination);
 
         osc.start(t);
-        osc.stop(t + 0.13);
+        osc.stop(t + 0.12);
       } catch (_) {}
     }
 
@@ -598,7 +750,7 @@
       base[insertAt1] = { symbolName: rowTarget.symbolName, color: rowTarget.color, rowIndex };
       base[insertAt2] = { symbolName: rowTarget.symbolName, color: rowTarget.color, rowIndex };
 
-      return base.concat(base); // seamless scroll
+      return base.concat(base);
     }
 
     function renderTargets() {
@@ -610,7 +762,16 @@
 
         const chip = document.createElement("div");
         chip.className = "target-chip";
-        if (t.rowIndex === activeRowIndex && !t.done && !levelComplete) chip.classList.add("active");
+
+        // Highlight logic:
+        // - Normal: highlight all unfinished
+        // - Hard: highlight only the current required row
+        const shouldHighlight =
+          !t.done &&
+          !levelComplete &&
+          (mode === MODES.NORMAL || t.rowIndex === activeRowIndex);
+
+        if (shouldHighlight) chip.classList.add("active");
         if (t.done) chip.classList.add("done");
 
         const img = document.createElement("img");
@@ -630,39 +791,46 @@
         meaning.className = "meaning";
         meaning.textContent = symbol.meaning;
 
-        const badge = document.createElement("span");
-        badge.className = "row-badge";
-        badge.textContent = `Row ${t.rowIndex + 1}${t.color !== "bw" ? ` • ${t.color.toUpperCase()}` : ""}`;
+        const rowBadge = document.createElement("span");
+        rowBadge.className = "badge";
+        rowBadge.textContent = `ROW ${t.rowIndex + 1}`;
+
+        const colorBadge = document.createElement("span");
+        colorBadge.className = "badge color";
+        colorBadge.textContent = (t.color === "bw") ? "B&W" : t.color.toUpperCase();
 
         meta.appendChild(name);
         meta.appendChild(meaning);
 
         chip.appendChild(img);
         chip.appendChild(meta);
-        chip.appendChild(badge);
+        chip.appendChild(rowBadge);
+        chip.appendChild(colorBadge);
         targetContainer.appendChild(chip);
       });
     }
 
     function updateHUD() {
+      const level = LEVELS[currentLevelIndex];
       const total = targets.length;
       const doneCount = targets.filter(t => t.done).length;
 
-      levelDisplay.textContent = `Level ${LEVELS[currentLevelIndex].level}`;
+      levelDisplay.textContent = `LEVEL ${level.level}`;
       progressCounter.textContent = `${doneCount} / ${total}`;
-      timerPill.textContent = `⏱ ${secondsLeft}`;
+      timerPill.textContent = `TIME: ${secondsLeft}`;
+      modePill.textContent = `MODE: ${mode}`;
     }
 
     function pauseRow(rowIndex) {
       const row = document.querySelector(`.moving-row[data-row="${rowIndex}"]`);
-      const lane = document.querySelector(`.lane[data-row="${rowIndex}"]`);
+      const lane = laneEl(rowIndex);
       if (row) row.style.animationPlayState = "paused";
       if (lane) lane.classList.add("paused");
     }
 
     function resumeRow(rowIndex) {
       const row = document.querySelector(`.moving-row[data-row="${rowIndex}"]`);
-      const lane = document.querySelector(`.lane[data-row="${rowIndex}"]`);
+      const lane = laneEl(rowIndex);
       if (row) row.style.animationPlayState = "running";
       if (lane) lane.classList.remove("paused");
     }
@@ -685,37 +853,55 @@
       timerId = null;
     }
 
-    function restartStepTimer() {
+    function startLevelTimer(levelSeconds) {
       stopTimer();
-      const level = LEVELS[currentLevelIndex];
-      secondsLeft = level.stepTimeSeconds;
+      secondsLeft = levelSeconds;
       updateHUD();
 
       timerId = setInterval(() => {
         if (paused || levelComplete) return;
         secondsLeft -= 1;
+
         if (secondsLeft <= 0) {
           secondsLeft = 0;
           updateHUD();
-          onTimeoutReset();
+          onTimeUp();
           return;
         }
         updateHUD();
       }, 1000);
     }
 
-    function onTimeoutReset() {
+    function showOverlay(title, text) {
+      overlayTitle.textContent = title;
+      overlayText.textContent = text;
+      overlay.classList.add("show");
+    }
+
+    function hideOverlay() {
+      overlay.classList.remove("show");
+    }
+
+    function onTimeUp() {
       stopTimer();
-      setAllRowsState("running");
+      setAllRowsState("paused");
+      showOverlay(
+        "TIME'S UP",
+        "No worries — try again. Tip: taps only count inside the center window."
+      );
+    }
 
-      // Full restart of attempt (as you originally described)
-      targets.forEach(t => (t.done = false));
-      activeRowIndex = 0;
-      levelComplete = false;
-
+    function onLevelWin() {
+      levelComplete = true;
+      stopTimer();
+      setAllRowsState("paused");
       renderTargets();
       updateHUD();
-      restartStepTimer();
+
+      showOverlay(
+        "MATCH COMPLETE",
+        `Level ${LEVELS[currentLevelIndex].level} cleared. Ready for the next level?`
+      );
     }
 
     function buildLevel(levelIndex) {
@@ -727,9 +913,11 @@
       rowsArea.innerHTML = "";
       paused = false;
       levelComplete = false;
-      pauseButton.textContent = "⏸ Pause";
+      pauseButton.textContent = "PAUSE";
 
       targets = buildTargetsForLevel(level);
+
+      // Reset hard-mode ordering
       activeRowIndex = 0;
 
       for (let r = 0; r < level.rows; r++) {
@@ -741,7 +929,7 @@
         movingRow.className = `moving-row ${rowDirection(r)}`;
         movingRow.dataset.row = String(r);
 
-        // Speed ramps slightly by row
+        // Slightly vary speed per row for feel
         const speed = Math.max(6, level.baseSpeedSeconds - (r % 2));
         movingRow.style.setProperty("--speed", `${speed}s`);
 
@@ -758,26 +946,26 @@
       }
 
       renderTargets();
-      secondsLeft = level.stepTimeSeconds;
       updateHUD();
-      restartStepTimer();
+      startLevelTimer(level.levelTimeSeconds);
       setAllRowsState("running");
+      hideOverlay();
     }
 
     function togglePause() {
       if (levelComplete) return;
-      paused = !paused;
 
+      paused = !paused;
       if (paused) {
         setAllRowsState("paused");
-        pauseButton.textContent = "▶ Resume";
+        pauseButton.textContent = "RESUME";
       } else {
-        // Resume only rows not done
+        // Resume only unsolved rows
         targets.forEach(t => {
           if (t.done) pauseRow(t.rowIndex);
           else resumeRow(t.rowIndex);
         });
-        pauseButton.textContent = "⏸ Pause";
+        pauseButton.textContent = "PAUSE";
       }
     }
 
@@ -787,15 +975,44 @@
       buildLevel(currentLevelIndex);
     }
 
+    function restartLevel() {
+      stopTimer();
+      buildLevel(currentLevelIndex);
+    }
+
     function nextLevel() {
       stopTimer();
       currentLevelIndex = Math.min(currentLevelIndex + 1, LEVELS.length - 1);
       buildLevel(currentLevelIndex);
     }
 
+    function toggleMode() {
+      mode = (mode === MODES.NORMAL) ? MODES.HARD : MODES.NORMAL;
+
+      // When switching into HARD, reset the ordering marker
+      activeRowIndex = nextUndoneRowIndex();
+
+      renderTargets();
+      updateHUD();
+
+      showOverlay(
+        "MODE CHANGED",
+        mode === MODES.NORMAL
+          ? "Normal mode: solve rows in any order."
+          : "Hard mode: solve Row 1, then Row 2, then Row 3, then Row 4."
+      );
+    }
+
     resetButton.addEventListener("click", restartFromLevel1);
     pauseButton.addEventListener("click", togglePause);
     nextButton.addEventListener("click", nextLevel);
+    modeButton.addEventListener("click", toggleMode);
+
+    overlayRestart.addEventListener("click", () => {
+      hideOverlay();
+      restartLevel();
+    });
+    overlayClose.addEventListener("click", hideOverlay);
 
     window.onload = () => buildLevel(currentLevelIndex);
   </script>
