@@ -1,31 +1,30 @@
+<!-- /index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes"
-  />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
   <title>Adinkra Movers</title>
 
   <style>
     :root{
       --bg: #f2e4d6;
       --ink: #1f140e;
-      --muted: rgba(31,20,14,0.70);
+      --muted: rgba(31,20,14,0.68);
       --line: rgba(31,20,14,0.16);
-      --paper: rgba(255,255,255,0.70);
-      --paper2: rgba(255,255,255,0.42);
+      --paper: rgba(255,255,255,0.72);
+      --paper2: rgba(255,255,255,0.44);
       --shadow: 0 12px 26px rgba(0,0,0,0.12);
       --r: 12px;
 
-      --windowW: clamp(240px, 38vw, 380px);
+      /* Wider window on desktop, still responsive */
+      --windowW: clamp(300px, 46vw, 560px);
 
-      /* JS sets these */
+      /* JS sets these to ensure rows fit */
       --lanePadY: 10px;
       --laneGap: 10px;
-      --symbolMin: 72px;
-      --symbolMax: 104px;
+      --symbolMin: 64px;
+      --symbolMax: 100px;
     }
 
     *{ box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color: transparent; }
@@ -36,17 +35,18 @@
       min-height: 100vh;
       display:flex;
       justify-content:center;
-      align-items:center;
-      padding: 8px; /* tighter for phones */
+      align-items:stretch;
+      padding: 0; /* no wasted space; helps prevent bottom cutoff */
     }
 
     .wrap{
-      width: min(980px, 100%);
+      width: min(1400px, 98vw); /* use desktop space */
+      margin: 0 auto;
       display:flex;
       flex-direction:column;
-      gap: 8px;
-      max-height: 100vh;
-      overflow: hidden;
+      gap: 10px;
+      height: 100vh;
+      padding: 10px;
     }
 
     .top{
@@ -54,24 +54,25 @@
       border: 1px solid var(--line);
       border-radius: var(--r);
       box-shadow: var(--shadow);
-      padding: 10px 10px 8px 10px;
+      padding: 10px;
       display:flex;
       flex-direction:column;
-      gap: 8px;
+      gap: 10px;
       flex: 0 0 auto;
+      overflow: hidden; /* ensures no internal scroll */
     }
 
     .top-header{
       display:flex;
       gap: 10px;
-      align-items:flex-start;
+      align-items:center;
       justify-content:space-between;
       flex-wrap:wrap;
     }
 
     .brand{
       flex: 1;
-      min-width: 240px;
+      min-width: 260px;
       display:flex;
       flex-direction:column;
       gap: 6px;
@@ -81,14 +82,18 @@
       font-weight: 1000;
       text-transform: uppercase;
       letter-spacing: 0.6px;
-      font-size: clamp(1.05rem, 2.1vw, 1.45rem);
+      font-size: clamp(1.05rem, 1.8vw, 1.45rem);
       line-height: 1.0;
     }
 
+    /* One clean instruction line (no paragraph wall) */
     .brand p{
       color: var(--muted);
-      line-height: 1.22;
-      font-size: clamp(0.90rem, 1.6vw, 1.0rem);
+      line-height: 1.2;
+      font-size: clamp(0.86rem, 1.2vw, 0.98rem);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .controls{
@@ -100,7 +105,7 @@
     }
 
     .chip{
-      background: rgba(255,255,255,0.78);
+      background: rgba(255,255,255,0.80);
       border: 1px solid var(--line);
       border-radius: 999px;
       padding: 7px 10px;
@@ -115,7 +120,7 @@
       border: 1px solid var(--line);
       border-radius: 999px;
       overflow:hidden;
-      background: rgba(255,255,255,0.78);
+      background: rgba(255,255,255,0.80);
     }
     .mode button{
       border: none;
@@ -129,14 +134,14 @@
       font-size: 0.84rem;
     }
     .mode button.active{
-      background: rgba(255, 212, 0, 0.35);
+      background: rgba(255, 212, 0, 0.38);
       box-shadow: inset 0 0 0 1px rgba(31,20,14,0.10);
       color: var(--ink);
     }
 
     .btn{
       border: 1px solid var(--line);
-      background: rgba(255,255,255,0.85);
+      background: rgba(255,255,255,0.88);
       border-radius: 999px;
       padding: 7px 12px;
       font-weight: 1000;
@@ -155,6 +160,7 @@
       border-top: 1px solid var(--line);
       padding-top: 8px;
     }
+
     .targets .label{
       font-weight: 1000;
       text-transform: uppercase;
@@ -163,33 +169,42 @@
       white-space: nowrap;
     }
 
-    /* Stable: no reflow jump */
+    /* Desktop: wrap (no scrollbar). Mobile: swipe-scroll (scrollbar hidden). */
     #targetContainer{
       display:flex;
       gap: 8px;
       align-items:center;
       flex: 1;
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      overflow-y: hidden;
-      padding-bottom: 2px;
-      -webkit-overflow-scrolling: touch;
+      flex-wrap: wrap;
+      overflow: hidden;
+    }
+    @media (max-width: 720px){
+      #targetContainer{
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 2px;
+      }
+      #targetContainer::-webkit-scrollbar{ height: 0px; }
+      #targetContainer{ scrollbar-width: none; }
     }
 
     .target-tag{
-      flex: 0 0 320px;
-      max-width: 320px;
-      min-width: 320px;
-      height: 64px;                 /* lock height to prevent jump */
       display:flex;
       align-items:center;
       gap: 10px;
       padding: 7px 10px;
       border-radius: 999px;
       border: 1px solid var(--line);
-      background: rgba(255,255,255,0.88);
+      background: rgba(255,255,255,0.90);
+      height: 62px; /* locked */
+      min-width: 280px;
+      max-width: 360px;
+      flex: 1 1 280px;
     }
-    .target-tag.done{ opacity: 0.60; }
+
+    .target-tag.done{ opacity: 0.62; }
     .target-tag.active{
       outline: 2px solid rgba(255, 212, 0, 0.55);
       outline-offset: 2px;
@@ -199,6 +214,7 @@
       width: 46px;
       height: 46px;
       object-fit: contain;
+      flex: 0 0 auto;
     }
 
     .target-meta{
@@ -208,6 +224,7 @@
       min-width: 0;
       flex: 1;
     }
+
     .target-meta .name{
       font-weight: 1000;
       text-transform: uppercase;
@@ -219,10 +236,9 @@
       text-overflow: ellipsis;
     }
 
-    /* reserve space always; reveal by visibility */
     .target-meta .meaning{
       display:block;
-      visibility:hidden;
+      visibility:hidden; /* reserved space, no jump */
       height: 1.1em;
       color: var(--muted);
       font-size: 0.80rem;
@@ -231,13 +247,11 @@
       overflow:hidden;
       text-overflow: ellipsis;
     }
-    .target-tag.done .target-meta .meaning{
-      visibility: visible;
-    }
+    .target-tag.done .target-meta .meaning{ visibility: visible; }
 
     .pill{
       border: 1px solid var(--line);
-      background: rgba(255,255,255,0.74);
+      background: rgba(255,255,255,0.76);
       border-radius: 999px;
       padding: 6px 9px;
       font-weight: 1000;
@@ -245,6 +259,7 @@
       letter-spacing: 0.2px;
       font-size: 0.76rem;
       white-space: nowrap;
+      flex: 0 0 auto;
     }
 
     .color-dot{
@@ -263,13 +278,13 @@
       position: relative;
       border: 1px solid var(--line);
       border-radius: var(--r);
-      background: linear-gradient(180deg, rgba(255,255,255,0.56), rgba(255,255,255,0.34));
+      background: linear-gradient(180deg, rgba(255,255,255,0.58), rgba(255,255,255,0.36));
       box-shadow: var(--shadow);
       padding: 10px;
       overflow:hidden;
       flex: 1 1 auto;
-      min-height: 0;
-      transition: opacity 220ms ease;
+      min-height: 0; /* critical for flex children */
+      transition: opacity 180ms ease;
     }
 
     .window{
@@ -293,7 +308,7 @@
       overflow:hidden;
       border-radius: 0px;
       border: 1px solid rgba(31,20,14,0.18);
-      background: rgba(255,255,255,0.92);
+      background: rgba(255,255,255,0.94);
       padding: var(--lanePadY) 0;
       margin: var(--laneGap) 0;
     }
@@ -326,7 +341,7 @@
     }
     .lane.paused{
       border-color: rgba(31,20,14,0.30);
-      background: rgba(255,255,255,0.97);
+      background: rgba(255,255,255,0.98);
     }
 
     .moving-row{
@@ -353,8 +368,8 @@
     }
 
     .symbol{
-      width: clamp(var(--symbolMin), 10vw, var(--symbolMax));
-      height: clamp(var(--symbolMin), 10vw, var(--symbolMax));
+      width: clamp(var(--symbolMin), 7vw, var(--symbolMax));
+      height: clamp(var(--symbolMin), 7vw, var(--symbolMax));
       object-fit: contain;
       cursor:pointer;
       user-select:none;
@@ -366,7 +381,7 @@
     .symbol.target{
       outline: 2px solid rgba(255, 212, 0, 0.55);
       outline-offset: 2px;
-      box-shadow: 0 0 10px rgba(255, 212, 0, 0.70);
+      box-shadow: 0 0 10px rgba(255, 212, 0, 0.72);
       border-radius: 8px;
     }
 
@@ -378,12 +393,10 @@
       75%{ transform: translateX(-4px); }
     }
 
-    /* IMPORTANT: no filter on .symbol; filter lives in c-* classes */
+    /* Filters live ONLY here (not on .symbol) */
     .c-bw{
       filter: drop-shadow(0 2px 3px rgba(0,0,0,0.10));
     }
-
-    /* Bright primary tints for pure black icons */
     .c-red{
       filter: brightness(0) saturate(100%) invert(15%) sepia(97%) saturate(6000%) hue-rotate(355deg) brightness(100%) contrast(110%)
               drop-shadow(0 2px 3px rgba(0,0,0,0.10));
@@ -416,30 +429,23 @@
       letter-spacing: 0.25px;
       display:none;
       z-index: 999;
-      max-width: min(92vw, 700px);
+      max-width: min(92vw, 820px);
       text-align:center;
       white-space: nowrap;
       overflow:hidden;
       text-overflow: ellipsis;
     }
     .toast.show{ display:block; }
-
-    @media (prefers-reduced-motion: reduce){
-      .moving-row{ animation: none; }
-    }
   </style>
 </head>
 
 <body>
   <div class="wrap">
-    <div class="top">
+    <div class="top" id="top">
       <div class="top-header">
         <div class="brand">
           <h1>Adinkra Movers</h1>
-          <p>
-            Tap the correct symbol on the correct row — taps only count inside the center window.
-            Each correct row pauses. Timer is per level.
-          </p>
+          <p>Tap the matching symbol inside the window. Clear each row to advance.</p>
         </div>
 
         <div class="controls">
@@ -475,7 +481,7 @@
       { name: "Sankofa", file: "Sankofa-egg.png", meaning: "Return and get it" },
       { name: "Dwennimmen", file: "Dwennimmen.png", meaning: "Strength & humility" },
       { name: "Gye Nyame", file: "Gye-Nyame.png", meaning: "Supremacy of God" },
-      { name: "Akoma", file: "Akoma-view.png", meaning: "Love & patience" },
+      { name: "Akoma", file: "Akoma-d.png", meaning: "Love & patience" },
       { name: "Duafe", file: "Duafe-beauty.png", meaning: "Beauty & care" },
       { name: "Odo Nyera", file: "love-will.png", meaning: "Eternal love" }
     ];
@@ -483,19 +489,20 @@
     const COLORS = ["red", "yellow", "blue", "green"];
     const MODES = { NORMAL: "NORMAL", HARD: "HARD" };
 
-    // Make targets appear more often to reduce “waiting isn’t my fault”.
-    const TARGET_APPEAR_EVERY_SECONDS = 2.0;
+    // fairness: target should show at least once every X seconds
+    const TARGET_APPEAR_EVERY_SECONDS = 2.2;
 
-    // Max 4 rows; colors begin at 4; level 6 has colored decoys (not in target color).
     const LEVELS = [
-      { level: 1, rows: 1, useColors: false, levelTimeSeconds: 20, baseSpeedSeconds: 12, baseLen: 18, coloredDistractors: false },
-      { level: 2, rows: 2, useColors: false, levelTimeSeconds: 22, baseSpeedSeconds: 12, baseLen: 18, coloredDistractors: false },
-      { level: 3, rows: 3, useColors: false, levelTimeSeconds: 24, baseSpeedSeconds: 11, baseLen: 20, coloredDistractors: false },
-      { level: 4, rows: 3, useColors: true,  levelTimeSeconds: 24, baseSpeedSeconds: 10, baseLen: 20, coloredDistractors: false },
-      { level: 5, rows: 4, useColors: true,  levelTimeSeconds: 24, baseSpeedSeconds: 9,  baseLen: 22, coloredDistractors: false },
-      { level: 6, rows: 4, useColors: true,  levelTimeSeconds: 24, baseSpeedSeconds: 8,  baseLen: 22, coloredDistractors: true, coloredDistractorRate: 0.18 }
+      { level: 1, rows: 1, useColors: false, levelTimeSeconds: 20, baseSpeedSeconds: 12, baseLen: 22, coloredDistractors: false },
+      { level: 2, rows: 2, useColors: false, levelTimeSeconds: 22, baseSpeedSeconds: 12, baseLen: 22, coloredDistractors: false },
+      { level: 3, rows: 3, useColors: false, levelTimeSeconds: 24, baseSpeedSeconds: 11, baseLen: 24, coloredDistractors: false },
+      { level: 4, rows: 3, useColors: true,  levelTimeSeconds: 24, baseSpeedSeconds: 10, baseLen: 24, coloredDistractors: false },
+      { level: 5, rows: 4, useColors: true,  levelTimeSeconds: 24, baseSpeedSeconds: 9,  baseLen: 26, coloredDistractors: false },
+      { level: 6, rows: 4, useColors: true,  levelTimeSeconds: 24, baseSpeedSeconds: 8,  baseLen: 26, coloredDistractors: true, coloredDistractorRate: 0.18 }
     ];
 
+    const topEl = document.getElementById("top");
+    const machineEl = document.getElementById("machine");
     const rowsArea = document.getElementById("rowsArea");
     const targetContainer = document.getElementById("targetContainer");
     const levelDisplay = document.getElementById("levelDisplay");
@@ -504,15 +511,14 @@
     const resetButton = document.getElementById("resetButton");
     const slotWindow = document.getElementById("slotWindow");
     const toast = document.getElementById("toast");
-    const machine = document.getElementById("machine");
     const modeNormalBtn = document.getElementById("modeNormal");
     const modeHardBtn = document.getElementById("modeHard");
 
     let currentLevelIndex = 0;
     let mode = MODES.NORMAL;
 
-    let targets = [];
-    let activeRowIndex = 0;
+    let targets = [];         // { rowIndex, symbolName, color, done }
+    let activeRowIndex = 0;   // hard mode ordering
 
     let levelComplete = false;
     let secondsLeft = 0;
@@ -527,22 +533,6 @@
       }
     }
 
-    function applyResponsiveSizing(levelRows) {
-      const root = document.documentElement.style;
-      const vh = window.innerHeight || 800;
-
-      // Keep everything on one screen. This favors Android mid-range screens.
-      const maxSymbol = Math.min(110, Math.floor(vh / (levelRows * 1.6)));
-      const minSymbol = Math.max(54, Math.floor(maxSymbol * 0.78));
-      const pad = Math.max(4, Math.floor(maxSymbol * 0.10));
-      const gap = Math.max(4, Math.floor(maxSymbol * 0.10));
-
-      root.setProperty("--symbolMax", `${maxSymbol}px`);
-      root.setProperty("--symbolMin", `${minSymbol}px`);
-      root.setProperty("--lanePadY", `${pad}px`);
-      root.setProperty("--laneGap", `${gap}px`);
-    }
-
     function showToast(msg, ms = 900) {
       toast.textContent = msg;
       toast.classList.add("show");
@@ -551,6 +541,14 @@
 
     function getSymbol(name) {
       return SYMBOLS.find(s => s.name === name) || null;
+    }
+
+    function shuffle(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
     }
 
     function rowDirection(rowIndex) {
@@ -631,40 +629,12 @@
         if (secondsLeft <= 0) {
           secondsLeft = 0;
           updateHUD();
-          onTimeUp();
+          showToast("Time’s up — try again", 1100);
+          restartLevel();
           return;
         }
         updateHUD();
       }, 1000);
-    }
-
-    function onTimeUp() {
-      stopTimer();
-      showToast("Time’s up — try again", 1100);
-      restartLevel();
-    }
-
-    function fadeRebuild(nextIndex) {
-      machine.style.opacity = "0";
-      setTimeout(() => {
-        buildLevel(nextIndex);
-        machine.style.opacity = "1";
-      }, 220);
-    }
-
-    function onLevelWin() {
-      levelComplete = true;
-      stopTimer();
-      setAllRowsState("paused");
-
-      const levelNum = LEVELS[currentLevelIndex].level;
-      showToast(`Level ${levelNum} cleared`, 1000);
-
-      setTimeout(() => {
-        const nextIndex = (currentLevelIndex >= LEVELS.length - 1) ? 0 : (currentLevelIndex + 1);
-        currentLevelIndex = nextIndex;
-        fadeRebuild(currentLevelIndex);
-      }, 950);
     }
 
     function updateHUD() {
@@ -675,18 +645,31 @@
       timerPill.textContent = `TIME: ${secondsLeft}`;
     }
 
-    function shuffle(arr) {
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
-      return arr;
+    function applyResponsiveSizing(levelRows) {
+      // Fit all lanes into the available height so the bottom row isn't cut off.
+      const root = document.documentElement.style;
+      const vh = window.innerHeight || 800;
+
+      // Available vertical space for the machine area
+      const topH = topEl.getBoundingClientRect().height;
+      const paddingAndGaps = 10 /* wrap padding */ * 2 + 10 /* wrap gap-ish */;
+      const machineAvailable = Math.max(240, vh - topH - paddingAndGaps);
+
+      // Symbol sizing driven by available height and row count
+      const maxSymbol = Math.min(130, Math.floor(machineAvailable / (levelRows * 1.45)));
+      const minSymbol = Math.max(52, Math.floor(maxSymbol * 0.78));
+      const pad = Math.max(4, Math.floor(maxSymbol * 0.10));
+      const gap = Math.max(4, Math.floor(maxSymbol * 0.10));
+
+      root.setProperty("--symbolMax", `${maxSymbol}px`);
+      root.setProperty("--symbolMin", `${minSymbol}px`);
+      root.setProperty("--lanePadY", `${pad}px`);
+      root.setProperty("--laneGap", `${gap}px`);
     }
 
     function buildTargetsForLevel(level) {
       const names = shuffle(SYMBOLS.map(s => s.name).slice());
       const chosen = [];
-
       for (let r = 0; r < level.rows; r++) {
         const symbolName = names[r % names.length];
         const color = level.useColors ? COLORS[r % COLORS.length] : "bw";
@@ -696,7 +679,6 @@
     }
 
     function computeTargetCount(level, speedSeconds, baseLen) {
-      // +1 buffer and min 4 as recommended for perceived fairness.
       const symPerSecond = baseLen / Math.max(1, speedSeconds);
       const maxGapSymbols = Math.max(3, Math.ceil(TARGET_APPEAR_EVERY_SECONDS * symPerSecond));
       const needed = Math.ceil(baseLen / maxGapSymbols) + 1;
@@ -704,17 +686,13 @@
     }
 
     function pickTargetPositionsEven({ baseLen, targetCount }) {
-      // stricter even spacing, smaller jitter (wrap-around feel)
       const positions = [];
       const step = Math.floor(baseLen / (targetCount + 1));
-
       for (let i = 1; i <= targetCount; i++) {
         const jitter = Math.floor(Math.random() * (step * 0.3));
         const p = (i * step + jitter) % baseLen;
         positions.push(p);
       }
-
-      // ensure uniqueness
       const uniq = Array.from(new Set(positions));
       while (uniq.length < targetCount) {
         const p = Math.floor(Math.random() * baseLen);
@@ -724,24 +702,14 @@
       return uniq;
     }
 
-    function buildRowSequence({
-      level,
-      speedSeconds,
-      baseLen,
-      targetName,
-      targetColor
-    }) {
+    function buildRowSequence({ level, speedSeconds, baseLen, targetName, targetColor }) {
       const items = new Array(baseLen).fill(null);
 
       const targetCount = computeTargetCount(level, speedSeconds, baseLen);
       const positions = pickTargetPositionsEven({ baseLen, targetCount });
 
       for (const p of positions) {
-        items[p] = {
-          name: targetName,
-          color: level.useColors ? targetColor : "bw",
-          isTarget: true
-        };
+        items[p] = { name: targetName, color: level.useColors ? targetColor : "bw", isTarget: true };
       }
 
       let last = null;
@@ -766,9 +734,6 @@
         if (!pick) pick = SYMBOLS[0].name === targetName ? SYMBOLS[1].name : SYMBOLS[0].name;
 
         let color = "bw";
-
-        // Levels 4–5: distractors BW (your vision)
-        // Level 6: colored decoys, avoid matching targetColor to reduce confusion
         if (level.useColors && level.coloredDistractors) {
           const rate = typeof level.coloredDistractorRate === "number" ? level.coloredDistractorRate : 0.18;
           if (Math.random() < rate) {
@@ -842,28 +807,49 @@
       updateHUD();
     }
 
+    function onLevelWin() {
+      levelComplete = true;
+      stopTimer();
+      setAllRowsState("paused");
+
+      const levelNum = LEVELS[currentLevelIndex].level;
+      showToast(`Level ${levelNum} cleared`, 1000);
+
+      setTimeout(() => {
+        const next = (currentLevelIndex >= LEVELS.length - 1) ? 0 : (currentLevelIndex + 1);
+        currentLevelIndex = next;
+        machineEl.style.opacity = "0";
+        setTimeout(() => {
+          buildLevel(currentLevelIndex);
+          machineEl.style.opacity = "1";
+        }, 180);
+      }, 900);
+    }
+
     function onSymbolClick(e) {
       if (levelComplete) return;
 
       const img = e.currentTarget;
-
-      if (!isInsideSlotWindow(img)) {
-        beep(false);
-        flashLane(Number(img.dataset.row), "bad");
-        img.classList.add("shake");
-        setTimeout(() => img.classList.remove("shake"), 260);
-        return;
-      }
-
       const rowIndex = Number(img.dataset.row);
       const name = img.dataset.name;
       const color = img.dataset.color;
+
+      // IMPORTANT: if player clicks but it's outside the window, show obvious feedback
+      if (!isInsideSlotWindow(img)) {
+        beep(false);
+        flashLane(rowIndex, "bad");
+        img.classList.add("shake");
+        setTimeout(() => img.classList.remove("shake"), 260);
+        showToast("Tap inside the window", 750);
+        return;
+      }
 
       if (mode === MODES.HARD && rowIndex !== activeRowIndex) {
         beep(false);
         flashLane(rowIndex, "bad");
         img.classList.add("shake");
         setTimeout(() => img.classList.remove("shake"), 260);
+        showToast("Hard mode: solve in order", 750);
         return;
       }
 
@@ -887,9 +873,9 @@
         return;
       }
 
+      // Correct
       beep(true);
       flashLane(rowIndex, "good");
-
       target.done = true;
       pauseRow(rowIndex);
 
@@ -900,22 +886,21 @@
 
       renderTargets();
 
-      if (targets.every(t => t.done)) {
-        onLevelWin();
-      }
+      if (targets.every(t => t.done)) onLevelWin();
     }
 
     function buildLevel(levelIndex) {
       const level = LEVELS[levelIndex];
       if (!level) return;
 
-      applyResponsiveSizing(level.rows);
-
       levelComplete = false;
       rowsArea.innerHTML = "";
 
       targets = buildTargetsForLevel(level);
       activeRowIndex = 0;
+
+      // Size AFTER targets header is in place, then again after lanes mount
+      applyResponsiveSizing(level.rows);
 
       for (let r = 0; r < level.rows; r++) {
         const lane = document.createElement("div");
@@ -945,12 +930,13 @@
           const el = document.createElement("img");
           el.src = `images/${s.file}`;
           el.alt = it.name;
+
+          // In levels 4–5: only targets colored. In level 6: some decoys colored.
           el.className = `symbol ${colorClass(it.color)}${it.isTarget ? " target" : ""}`;
 
           el.dataset.row = String(r);
           el.dataset.name = it.name;
           el.dataset.color = it.color;
-          el.dataset.isTarget = it.isTarget ? "true" : "false";
 
           el.setAttribute(
             "aria-label",
@@ -966,6 +952,10 @@
       }
 
       renderTargets();
+
+      // Re-measure once rows exist (prevents bottom row cutoff)
+      requestAnimationFrame(() => applyResponsiveSizing(level.rows));
+
       setAllRowsState("running");
       startLevelTimer(level.levelTimeSeconds);
 
@@ -999,7 +989,10 @@
     resetButton.addEventListener("click", restartFromLevel1);
     modeNormalBtn.addEventListener("click", () => setMode(MODES.NORMAL));
     modeHardBtn.addEventListener("click", () => setMode(MODES.HARD));
-    window.addEventListener("resize", () => applyResponsiveSizing(LEVELS[currentLevelIndex].rows));
+
+    window.addEventListener("resize", () => {
+      applyResponsiveSizing(LEVELS[currentLevelIndex].rows);
+    });
 
     window.onload = () => {
       preloadImages();
