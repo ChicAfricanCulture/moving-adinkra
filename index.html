@@ -221,7 +221,7 @@
             if (!symbol) return null;
             
             const img = document.createElement('img');
-            img.src = `assets/symbols/${symbol.file}`;
+           img.src = `images/${symbol.file}`;
             img.alt = symbolName;
             img.className = 'row-symbol';
             img.setAttribute('data-symbol', symbolName);
@@ -276,7 +276,7 @@
                 targetDiv.className = 'target-item';
                 
                 const img = document.createElement('img');
-                img.src = `assets/symbols/${symbol.file}`;
+               img.src = `images/${symbol.file}`;
                 img.alt = target.symbolName;
                 
                 const colorSpan = document.createElement('span');
