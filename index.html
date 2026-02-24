@@ -10,7 +10,6 @@
 
   <style>
     :root{
-      /* infographic paper */
       --bg: #f2e4d6;
       --ink: #1f140e;
       --muted: rgba(31,20,14,0.70);
@@ -18,18 +17,15 @@
       --paper: rgba(255,255,255,0.70);
       --paper2: rgba(255,255,255,0.42);
       --shadow: 0 12px 26px rgba(0,0,0,0.12);
-
-      /* crisp geometry */
       --r: 12px;
 
-      /* slot window */
-      --windowW: clamp(240px, 38vw, 360px);
+      --windowW: clamp(240px, 38vw, 380px);
 
-      /* responsive sizing set by JS */
+      /* JS sets these */
       --lanePadY: 10px;
       --laneGap: 10px;
-      --symbolMin: 78px;
-      --symbolMax: 110px;
+      --symbolMin: 72px;
+      --symbolMax: 104px;
     }
 
     *{ box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color: transparent; }
@@ -41,26 +37,28 @@
       display:flex;
       justify-content:center;
       align-items:center;
-      padding: 14px;
+      padding: 8px; /* tighter for phones */
     }
 
     .wrap{
       width: min(980px, 100%);
       display:flex;
       flex-direction:column;
-      gap: 12px;
+      gap: 8px;
+      max-height: 100vh;
+      overflow: hidden;
     }
 
-    /* cohesive header strip */
     .top{
       background: linear-gradient(180deg, var(--paper), var(--paper2));
       border: 1px solid var(--line);
       border-radius: var(--r);
       box-shadow: var(--shadow);
-      padding: 12px;
+      padding: 10px 10px 8px 10px;
       display:flex;
       flex-direction:column;
-      gap: 10px;
+      gap: 8px;
+      flex: 0 0 auto;
     }
 
     .top-header{
@@ -73,7 +71,7 @@
 
     .brand{
       flex: 1;
-      min-width: 260px;
+      min-width: 240px;
       display:flex;
       flex-direction:column;
       gap: 6px;
@@ -83,14 +81,14 @@
       font-weight: 1000;
       text-transform: uppercase;
       letter-spacing: 0.6px;
-      font-size: clamp(1.15rem, 2.2vw, 1.55rem);
+      font-size: clamp(1.05rem, 2.1vw, 1.45rem);
       line-height: 1.0;
     }
 
     .brand p{
       color: var(--muted);
       line-height: 1.22;
-      font-size: clamp(0.92rem, 1.7vw, 1.02rem);
+      font-size: clamp(0.90rem, 1.6vw, 1.0rem);
     }
 
     .controls{
@@ -105,11 +103,11 @@
       background: rgba(255,255,255,0.78);
       border: 1px solid var(--line);
       border-radius: 999px;
-      padding: 8px 10px;
+      padding: 7px 10px;
       font-weight: 1000;
       letter-spacing: 0.2px;
       white-space: nowrap;
-      font-size: 0.92rem;
+      font-size: 0.88rem;
     }
 
     .mode{
@@ -122,16 +120,16 @@
     .mode button{
       border: none;
       background: transparent;
-      padding: 8px 12px;
+      padding: 7px 12px;
       font-weight: 1000;
       text-transform: uppercase;
       letter-spacing: 0.25px;
       cursor:pointer;
       color: rgba(31,20,14,0.85);
-      font-size: 0.88rem;
+      font-size: 0.84rem;
     }
     .mode button.active{
-      background: rgba(255, 212, 0, 0.35); /* bright primary highlight */
+      background: rgba(255, 212, 0, 0.35);
       box-shadow: inset 0 0 0 1px rgba(31,20,14,0.10);
       color: var(--ink);
     }
@@ -140,23 +138,22 @@
       border: 1px solid var(--line);
       background: rgba(255,255,255,0.85);
       border-radius: 999px;
-      padding: 8px 12px;
+      padding: 7px 12px;
       font-weight: 1000;
       text-transform: uppercase;
       letter-spacing: 0.25px;
       cursor:pointer;
-      font-size: 0.88rem;
+      font-size: 0.84rem;
     }
     .btn:active{ transform: translateY(1px); }
 
-    /* targets strip (stable, no jumping) */
     .targets{
       display:flex;
       gap: 10px;
       align-items:center;
       flex-wrap:wrap;
       border-top: 1px solid var(--line);
-      padding-top: 10px;
+      padding-top: 8px;
     }
     .targets .label{
       font-weight: 1000;
@@ -166,39 +163,41 @@
       white-space: nowrap;
     }
 
+    /* Stable: no reflow jump */
     #targetContainer{
       display:flex;
       gap: 8px;
       align-items:center;
       flex: 1;
-      flex-wrap: nowrap;           /* key */
-      overflow-x: auto;            /* key */
+      flex-wrap: nowrap;
+      overflow-x: auto;
       overflow-y: hidden;
       padding-bottom: 2px;
       -webkit-overflow-scrolling: touch;
     }
 
     .target-tag{
-      flex: 0 0 320px;            /* fixed width = no reflow jumping */
+      flex: 0 0 320px;
       max-width: 320px;
       min-width: 320px;
+      height: 64px;                 /* lock height to prevent jump */
       display:flex;
       align-items:center;
       gap: 10px;
       padding: 7px 10px;
       border-radius: 999px;
       border: 1px solid var(--line);
-      background: rgba(255,255,255,0.86);
+      background: rgba(255,255,255,0.88);
     }
-    .target-tag.done{ opacity: 0.55; }
+    .target-tag.done{ opacity: 0.60; }
     .target-tag.active{
       outline: 2px solid rgba(255, 212, 0, 0.55);
       outline-offset: 2px;
     }
 
     .target-tag img{
-      width: 48px;
-      height: 48px;
+      width: 46px;
+      height: 46px;
       object-fit: contain;
     }
 
@@ -213,25 +212,27 @@
       font-weight: 1000;
       text-transform: uppercase;
       letter-spacing: 0.25px;
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       line-height: 1.05;
       white-space: nowrap;
       overflow:hidden;
       text-overflow: ellipsis;
     }
 
-    /* Hidden until matched, then revealed */
+    /* reserve space always; reveal by visibility */
     .target-meta .meaning{
-      display:none;
+      display:block;
+      visibility:hidden;
+      height: 1.1em;
       color: var(--muted);
-      font-size: 0.82rem;
+      font-size: 0.80rem;
       line-height: 1.1;
       white-space: nowrap;
       overflow:hidden;
       text-overflow: ellipsis;
     }
     .target-tag.done .target-meta .meaning{
-      display:block;
+      visibility: visible;
     }
 
     .pill{
@@ -242,7 +243,7 @@
       font-weight: 1000;
       text-transform: uppercase;
       letter-spacing: 0.2px;
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       white-space: nowrap;
     }
 
@@ -251,31 +252,34 @@
       height: 12px;
       border-radius: 50%;
       border: 1px solid rgba(31,20,14,0.12);
+      flex: 0 0 auto;
     }
     .dot-red{ background:#ff2d2d; }
     .dot-yellow{ background:#ffd400; }
     .dot-blue{ background:#0066ff; }
     .dot-green{ background:#00b050; }
 
-    /* machine */
     .machine{
       position: relative;
       border: 1px solid var(--line);
       border-radius: var(--r);
       background: linear-gradient(180deg, rgba(255,255,255,0.56), rgba(255,255,255,0.34));
       box-shadow: var(--shadow);
-      padding: 12px;
+      padding: 10px;
       overflow:hidden;
+      flex: 1 1 auto;
+      min-height: 0;
+      transition: opacity 220ms ease;
     }
 
     .window{
       position:absolute;
       left: 50%;
-      top: 12px;
-      bottom: 12px;
+      top: 10px;
+      bottom: 10px;
       width: var(--windowW);
       transform: translateX(-50%);
-      border-radius: 0px; /* crisp */
+      border-radius: 0px;
       border: 3px solid rgba(31,20,14,0.35);
       box-shadow:
         inset 0 0 0 2px rgba(255,255,255,0.65),
@@ -287,14 +291,13 @@
     .lane{
       position: relative;
       overflow:hidden;
-      border-radius: 0px; /* crisp */
+      border-radius: 0px;
       border: 1px solid rgba(31,20,14,0.18);
-      background: rgba(255,255,255,0.90);
+      background: rgba(255,255,255,0.92);
       padding: var(--lanePadY) 0;
       margin: var(--laneGap) 0;
     }
 
-    /* crisp slot edge fades */
     .lane::before,
     .lane::after{
       content:"";
@@ -313,19 +316,17 @@
       background: linear-gradient(to left, rgba(242,228,214,0.98), rgba(242,228,214,0));
     }
 
-    /* lane feedback */
     .lane.good{
       border-color: rgba(42,157,88,0.95);
-      box-shadow: inset 0 0 0 2px rgba(42,157,88,0.16);
+      box-shadow: inset 0 0 0 2px rgba(42,157,88,0.14);
     }
     .lane.bad{
       border-color: rgba(214,69,69,0.95);
-      box-shadow: inset 0 0 0 2px rgba(214,69,69,0.14);
+      box-shadow: inset 0 0 0 2px rgba(214,69,69,0.12);
     }
-
     .lane.paused{
       border-color: rgba(31,20,14,0.30);
-      background: rgba(255,255,255,0.96);
+      background: rgba(255,255,255,0.97);
     }
 
     .moving-row{
@@ -339,7 +340,6 @@
       animation-iteration-count: infinite;
       animation-play-state: running;
     }
-
     .moving-row.ltr{ animation-name: scroll-ltr; }
     .moving-row.rtl{ animation-name: scroll-rtl; }
 
@@ -363,6 +363,13 @@
     }
     .symbol:active{ transform: scale(0.92); }
 
+    .symbol.target{
+      outline: 2px solid rgba(255, 212, 0, 0.55);
+      outline-offset: 2px;
+      box-shadow: 0 0 10px rgba(255, 212, 0, 0.70);
+      border-radius: 8px;
+    }
+
     .shake{ animation: shake 260ms ease-in-out; }
     @keyframes shake{
       0%,100%{ transform: translateX(0); }
@@ -371,8 +378,7 @@
       75%{ transform: translateX(-4px); }
     }
 
-    /* IMPORTANT: no filter on .symbol; filter is owned by c-* classes */
-
+    /* IMPORTANT: no filter on .symbol; filter lives in c-* classes */
     .c-bw{
       filter: drop-shadow(0 2px 3px rgba(0,0,0,0.10));
     }
@@ -395,11 +401,10 @@
               drop-shadow(0 2px 3px rgba(0,0,0,0.10));
     }
 
-    /* toast */
     .toast{
       position: fixed;
       left: 50%;
-      bottom: 14px;
+      bottom: 10px;
       transform: translateX(-50%);
       padding: 10px 14px;
       border: 1px solid var(--line);
@@ -457,7 +462,7 @@
       </div>
     </div>
 
-    <div class="machine">
+    <div class="machine" id="machine">
       <div class="window" id="slotWindow" aria-hidden="true"></div>
       <div id="rowsArea"></div>
     </div>
@@ -466,16 +471,6 @@
   <div class="toast" id="toast"></div>
 
   <script>
-    /**
-     * Adinkra Movers
-     * - Global timer per level
-     * - Normal/Hard segmented control
-     * - Only targets are colored (Level 4+), distractors BW (except Level 6 expert colored distractors)
-     * - Fairness: target appears at least once every X seconds per row
-     * - No 3-in-a-row streaks
-     * - Target meanings reveal after correct match
-     */
-
     const SYMBOLS = [
       { name: "Sankofa", file: "Sankofa-egg.png", meaning: "Return and get it" },
       { name: "Dwennimmen", file: "Dwennimmen.png", meaning: "Strength & humility" },
@@ -488,18 +483,17 @@
     const COLORS = ["red", "yellow", "blue", "green"];
     const MODES = { NORMAL: "NORMAL", HARD: "HARD" };
 
-    // Fairness guarantee: target should show at least once every X seconds per row.
-    // Lower = easier/fairer. 3.2s feels good for this pace.
-    const TARGET_APPEAR_EVERY_SECONDS = 3.2;
+    // Make targets appear more often to reduce “waiting isn’t my fault”.
+    const TARGET_APPEAR_EVERY_SECONDS = 2.0;
 
-    // Max 4 rows; difficulty scales via speed + total time + color distractions.
+    // Max 4 rows; colors begin at 4; level 6 has colored decoys (not in target color).
     const LEVELS = [
-      { level: 1, rows: 1, useColors: false, levelTimeSeconds: 16, baseSpeedSeconds: 12, baseLen: 16, targetCountMin: 3, coloredDistractors: false },
-      { level: 2, rows: 2, useColors: false, levelTimeSeconds: 20, baseSpeedSeconds: 12, baseLen: 16, targetCountMin: 3, coloredDistractors: false },
-      { level: 3, rows: 3, useColors: false, levelTimeSeconds: 22, baseSpeedSeconds: 11, baseLen: 18, targetCountMin: 3, coloredDistractors: false },
-      { level: 4, rows: 3, useColors: true,  levelTimeSeconds: 22, baseSpeedSeconds: 10, baseLen: 18, targetCountMin: 3, coloredDistractors: false },
-      { level: 5, rows: 4, useColors: true,  levelTimeSeconds: 20, baseSpeedSeconds: 9,  baseLen: 20, targetCountMin: 3, coloredDistractors: false },
-      { level: 6, rows: 4, useColors: true,  levelTimeSeconds: 18, baseSpeedSeconds: 8,  baseLen: 20, targetCountMin: 3, coloredDistractors: true, coloredDistractorRate: 0.18 }
+      { level: 1, rows: 1, useColors: false, levelTimeSeconds: 20, baseSpeedSeconds: 12, baseLen: 18, coloredDistractors: false },
+      { level: 2, rows: 2, useColors: false, levelTimeSeconds: 22, baseSpeedSeconds: 12, baseLen: 18, coloredDistractors: false },
+      { level: 3, rows: 3, useColors: false, levelTimeSeconds: 24, baseSpeedSeconds: 11, baseLen: 20, coloredDistractors: false },
+      { level: 4, rows: 3, useColors: true,  levelTimeSeconds: 24, baseSpeedSeconds: 10, baseLen: 20, coloredDistractors: false },
+      { level: 5, rows: 4, useColors: true,  levelTimeSeconds: 24, baseSpeedSeconds: 9,  baseLen: 22, coloredDistractors: false },
+      { level: 6, rows: 4, useColors: true,  levelTimeSeconds: 24, baseSpeedSeconds: 8,  baseLen: 22, coloredDistractors: true, coloredDistractorRate: 0.18 }
     ];
 
     const rowsArea = document.getElementById("rowsArea");
@@ -510,16 +504,15 @@
     const resetButton = document.getElementById("resetButton");
     const slotWindow = document.getElementById("slotWindow");
     const toast = document.getElementById("toast");
-
+    const machine = document.getElementById("machine");
     const modeNormalBtn = document.getElementById("modeNormal");
     const modeHardBtn = document.getElementById("modeHard");
 
     let currentLevelIndex = 0;
     let mode = MODES.NORMAL;
 
-    // One target per row: { rowIndex, symbolName, color, done }
     let targets = [];
-    let activeRowIndex = 0; // used only in HARD
+    let activeRowIndex = 0;
 
     let levelComplete = false;
     let secondsLeft = 0;
@@ -527,24 +520,27 @@
 
     let audioCtx = null;
 
+    function preloadImages() {
+      for (const s of SYMBOLS) {
+        const img = new Image();
+        img.src = `images/${s.file}`;
+      }
+    }
+
     function applyResponsiveSizing(levelRows) {
       const root = document.documentElement.style;
-      if (levelRows <= 2) {
-        root.setProperty("--lanePadY", "10px");
-        root.setProperty("--laneGap", "10px");
-        root.setProperty("--symbolMin", "84px");
-        root.setProperty("--symbolMax", "112px");
-      } else if (levelRows === 3) {
-        root.setProperty("--lanePadY", "9px");
-        root.setProperty("--laneGap", "10px");
-        root.setProperty("--symbolMin", "78px");
-        root.setProperty("--symbolMax", "104px");
-      } else {
-        root.setProperty("--lanePadY", "8px");
-        root.setProperty("--laneGap", "9px");
-        root.setProperty("--symbolMin", "68px");
-        root.setProperty("--symbolMax", "92px");
-      }
+      const vh = window.innerHeight || 800;
+
+      // Keep everything on one screen. This favors Android mid-range screens.
+      const maxSymbol = Math.min(110, Math.floor(vh / (levelRows * 1.6)));
+      const minSymbol = Math.max(54, Math.floor(maxSymbol * 0.78));
+      const pad = Math.max(4, Math.floor(maxSymbol * 0.10));
+      const gap = Math.max(4, Math.floor(maxSymbol * 0.10));
+
+      root.setProperty("--symbolMax", `${maxSymbol}px`);
+      root.setProperty("--symbolMin", `${minSymbol}px`);
+      root.setProperty("--lanePadY", `${pad}px`);
+      root.setProperty("--laneGap", `${gap}px`);
     }
 
     function showToast(msg, ms = 900) {
@@ -648,6 +644,14 @@
       restartLevel();
     }
 
+    function fadeRebuild(nextIndex) {
+      machine.style.opacity = "0";
+      setTimeout(() => {
+        buildLevel(nextIndex);
+        machine.style.opacity = "1";
+      }, 220);
+    }
+
     function onLevelWin() {
       levelComplete = true;
       stopTimer();
@@ -657,13 +661,9 @@
       showToast(`Level ${levelNum} cleared`, 1000);
 
       setTimeout(() => {
-        if (currentLevelIndex >= LEVELS.length - 1) {
-          showToast("Game complete", 1400);
-          currentLevelIndex = 0;
-        } else {
-          currentLevelIndex += 1;
-        }
-        buildLevel(currentLevelIndex);
+        const nextIndex = (currentLevelIndex >= LEVELS.length - 1) ? 0 : (currentLevelIndex + 1);
+        currentLevelIndex = nextIndex;
+        fadeRebuild(currentLevelIndex);
       }, 950);
     }
 
@@ -696,24 +696,21 @@
     }
 
     function computeTargetCount(level, speedSeconds, baseLen) {
-      // ensure target appears at least once every TARGET_APPEAR_EVERY_SECONDS
-      // estimate: symbols per second ≈ baseLen / speedSeconds (half-loop)
+      // +1 buffer and min 4 as recommended for perceived fairness.
       const symPerSecond = baseLen / Math.max(1, speedSeconds);
       const maxGapSymbols = Math.max(3, Math.ceil(TARGET_APPEAR_EVERY_SECONDS * symPerSecond));
-      const needed = Math.ceil(baseLen / maxGapSymbols);
-      return Math.max(level.targetCountMin || 2, needed);
+      const needed = Math.ceil(baseLen / maxGapSymbols) + 1;
+      return Math.max(4, needed);
     }
 
-    function pickTargetPositions({ baseLen, targetCount, maxGapSymbols }) {
-      // choose positions such that the max distance between consecutive targets <= maxGapSymbols
-      // strategy: place targets roughly evenly, then jitter slightly
+    function pickTargetPositionsEven({ baseLen, targetCount }) {
+      // stricter even spacing, smaller jitter (wrap-around feel)
       const positions = [];
-      const step = baseLen / targetCount;
+      const step = Math.floor(baseLen / (targetCount + 1));
 
-      for (let i = 0; i < targetCount; i++) {
-        const center = Math.floor(i * step + step / 2);
-        const jitter = Math.floor((Math.random() * 3) - 1); // -1,0,1
-        let p = Math.max(0, Math.min(baseLen - 1, center + jitter));
+      for (let i = 1; i <= targetCount; i++) {
+        const jitter = Math.floor(Math.random() * (step * 0.3));
+        const p = (i * step + jitter) % baseLen;
         positions.push(p);
       }
 
@@ -724,56 +721,29 @@
         if (!uniq.includes(p)) uniq.push(p);
       }
       uniq.sort((a,b) => a-b);
-
-      // if any gap too large, tighten by inserting targets where needed (rare)
-      while (true) {
-        let tooBig = false;
-        for (let i = 1; i < uniq.length; i++) {
-          if ((uniq[i] - uniq[i-1]) > maxGapSymbols) {
-            tooBig = true;
-            const mid = Math.floor((uniq[i] + uniq[i-1]) / 2);
-            if (!uniq.includes(mid)) uniq.splice(i, 0, mid);
-            break;
-          }
-        }
-        if (!tooBig) break;
-        if (uniq.length > baseLen) break;
-      }
-
-      // trim if we inserted extras
-      while (uniq.length > targetCount) {
-        uniq.splice(Math.floor(uniq.length / 2), 1);
-      }
-
       return uniq;
     }
 
     function buildRowSequence({
       level,
-      rowIndex,
       speedSeconds,
       baseLen,
       targetName,
       targetColor
     }) {
-      // Distractors default to BW; only targets get targetColor in color levels.
-      // Level 6 "expert": some colored distractors (rate controlled).
       const items = new Array(baseLen).fill(null);
 
-      const symPerSecond = baseLen / Math.max(1, speedSeconds);
-      const maxGapSymbols = Math.max(3, Math.ceil(TARGET_APPEAR_EVERY_SECONDS * symPerSecond));
       const targetCount = computeTargetCount(level, speedSeconds, baseLen);
-
-      const positions = pickTargetPositions({ baseLen, targetCount, maxGapSymbols });
+      const positions = pickTargetPositionsEven({ baseLen, targetCount });
 
       for (const p of positions) {
         items[p] = {
           name: targetName,
-          color: level.useColors ? targetColor : "bw"
+          color: level.useColors ? targetColor : "bw",
+          isTarget: true
         };
       }
 
-      // Fill distractors with "no 3 streak" rule and (optionally) colored distractors
       let last = null;
       let streak = 0;
 
@@ -788,13 +758,8 @@
         let pick = null;
         for (let tries = 0; tries < 60; tries++) {
           const candidate = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)].name;
-
-          // Keep target appearances controlled by positions
           if (candidate === targetName) continue;
-
-          // Prevent 3 in a row
           if (candidate === last && streak >= 2) continue;
-
           pick = candidate;
           break;
         }
@@ -802,23 +767,22 @@
 
         let color = "bw";
 
+        // Levels 4–5: distractors BW (your vision)
+        // Level 6: colored decoys, avoid matching targetColor to reduce confusion
         if (level.useColors && level.coloredDistractors) {
-          const rate = typeof level.coloredDistractorRate === "number" ? level.coloredDistractorRate : 0.15;
+          const rate = typeof level.coloredDistractorRate === "number" ? level.coloredDistractorRate : 0.18;
           if (Math.random() < rate) {
-            // colored distractor (expert noise) but keep it random and not always targetColor
-            const options = COLORS.slice();
-            shuffle(options);
-            color = options[0];
+            const options = COLORS.filter(c => c !== targetColor);
+            color = options[Math.floor(Math.random() * options.length)];
           }
         }
 
-        items[i] = { name: pick, color };
+        items[i] = { name: pick, color, isTarget: false };
 
         if (pick === last) streak += 1;
         else { last = pick; streak = 1; }
       }
 
-      // Duplicate for seamless scroll
       return items.concat(items);
     }
 
@@ -843,7 +807,7 @@
         const img = document.createElement("img");
         img.alt = symbol.name;
         img.src = `images/${symbol.file}`;
-        img.classList.add(colorClass(t.color)); // target preview reflects required color
+        img.classList.add(colorClass(t.color));
 
         const dot = document.createElement("div");
         dot.className = "color-dot " + (t.color === "bw" ? "" : dotClass(t.color));
@@ -923,7 +887,6 @@
         return;
       }
 
-      // Correct
       beep(true);
       flashLane(rowIndex, "good");
 
@@ -951,13 +914,9 @@
       levelComplete = false;
       rowsArea.innerHTML = "";
 
-      // Targets: one per row
       targets = buildTargetsForLevel(level);
-
-      // Hard mode ordering starts at row 0
       activeRowIndex = 0;
 
-      // Build lanes
       for (let r = 0; r < level.rows; r++) {
         const lane = document.createElement("div");
         lane.className = "lane";
@@ -967,14 +926,12 @@
         movingRow.className = `moving-row ${rowDirection(r)}`;
         movingRow.dataset.row = String(r);
 
-        // slight per-row variance
         const speedSeconds = Math.max(6, level.baseSpeedSeconds - (r % 2));
         movingRow.style.setProperty("--speed", `${speedSeconds}s`);
 
         const rowTarget = targets.find(t => t.rowIndex === r);
         const seq = buildRowSequence({
           level,
-          rowIndex: r,
           speedSeconds,
           baseLen: level.baseLen,
           targetName: rowTarget.symbolName,
@@ -988,13 +945,17 @@
           const el = document.createElement("img");
           el.src = `images/${s.file}`;
           el.alt = it.name;
-
-          // ✅ Only target instances are colored (unless Level 6 expert colored distractors)
-          el.className = `symbol ${colorClass(it.color)}`;
+          el.className = `symbol ${colorClass(it.color)}${it.isTarget ? " target" : ""}`;
 
           el.dataset.row = String(r);
           el.dataset.name = it.name;
           el.dataset.color = it.color;
+          el.dataset.isTarget = it.isTarget ? "true" : "false";
+
+          el.setAttribute(
+            "aria-label",
+            it.color === "bw" ? `${it.name} black and white` : `${it.name} ${it.color}`
+          );
 
           el.addEventListener("click", onSymbolClick);
           movingRow.appendChild(el);
@@ -1028,7 +989,6 @@
       modeNormalBtn.classList.toggle("active", mode === MODES.NORMAL);
       modeHardBtn.classList.toggle("active", mode === MODES.HARD);
 
-      // In HARD, set active to first unfinished
       const next = targets.find(t => !t.done);
       activeRowIndex = next ? next.rowIndex : 0;
 
@@ -1039,8 +999,10 @@
     resetButton.addEventListener("click", restartFromLevel1);
     modeNormalBtn.addEventListener("click", () => setMode(MODES.NORMAL));
     modeHardBtn.addEventListener("click", () => setMode(MODES.HARD));
+    window.addEventListener("resize", () => applyResponsiveSizing(LEVELS[currentLevelIndex].rows));
 
     window.onload = () => {
+      preloadImages();
       setMode(MODES.NORMAL);
       buildLevel(currentLevelIndex);
     };
