@@ -262,7 +262,22 @@
     .target-tag.done .target-meta .meaning {
       visibility: visible;
     }
+/* ✅ FIX: make target symbol name readable (no white-on-white / embossed look) */
+.target-tag .target-meta .name{
+  color: var(--ink) !important;
+  text-shadow:
+    -1px -1px 0 rgba(255,255,255,0.65),
+     1px -1px 0 rgba(255,255,255,0.65),
+    -1px  1px 0 rgba(255,255,255,0.65),
+     1px  1px 0 rgba(255,255,255,0.65),
+     0px  2px 0 rgba(0,0,0,0.10);
+}
 
+/* ✅ FIX: meaning line also gets explicit color */
+.target-tag .target-meta .meaning{
+  color: rgba(31,20,14,0.72) !important;
+  text-shadow: none;
+}
     .pill {
       border: 1px solid var(--line);
       background: rgba(255,255,255,0.76);
