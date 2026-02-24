@@ -1,4 +1,3 @@
-<!-- /index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +6,7 @@
   <title>Adinkra Movers</title>
 
   <style>
-    :root{
+    :root {
       --bg: #f2e4d6;
       --ink: #1f140e;
       --muted: rgba(31,20,14,0.68);
@@ -17,68 +16,80 @@
       --shadow: 0 12px 26px rgba(0,0,0,0.12);
       --r: 12px;
 
-      /* Wider window on desktop, still responsive */
-      --windowW: clamp(300px, 46vw, 560px);
+      /* Ghana-inspired accent colors */
+      --gold: #D4AF37;
+      --kente-red: #B22222;
+      --earth: #8B4513;
+      --savanna: #C19A6B;
 
-      /* JS sets these to ensure rows fit */
+      --windowW: clamp(170px, 22vw, 240px);
       --lanePadY: 10px;
       --laneGap: 10px;
-      --symbolMin: 64px;
-      --symbolMax: 100px;
+      --symbolMin: 62px;
+      --symbolMax: 92px;
     }
 
-    *{ box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color: transparent; }
-    body{
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
       font-family: system-ui, -apple-system, sans-serif;
       background: var(--bg);
       color: var(--ink);
       min-height: 100vh;
-      display:flex;
-      justify-content:center;
-      align-items:stretch;
-      padding: 0; /* no wasted space; helps prevent bottom cutoff */
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      padding: 0;
+      transition: background-color 0.1s ease;
     }
 
-    .wrap{
-      width: min(1400px, 98vw); /* use desktop space */
+    .wrap {
+      width: min(1400px, 98vw);
       margin: 0 auto;
-      display:flex;
-      flex-direction:column;
+      display: flex;
+      flex-direction: column;
       gap: 10px;
       height: 100vh;
       padding: 10px;
     }
 
-    .top{
-      background: linear-gradient(180deg, var(--paper), var(--paper2));
+    .top {
+      background: linear-gradient(180deg, var(--gold), var(--earth));
       border: 1px solid var(--line);
       border-radius: var(--r);
       box-shadow: var(--shadow);
       padding: 10px;
-      display:flex;
-      flex-direction:column;
+      display: flex;
+      flex-direction: column;
       gap: 10px;
       flex: 0 0 auto;
-      overflow: hidden; /* ensures no internal scroll */
+      overflow: hidden;
+      color: white;
+      text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
     }
 
-    .top-header{
-      display:flex;
+    .top-header {
+      display: flex;
       gap: 10px;
-      align-items:center;
-      justify-content:space-between;
-      flex-wrap:wrap;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
     }
 
-    .brand{
+    .brand {
       flex: 1;
       min-width: 260px;
-      display:flex;
-      flex-direction:column;
+      display: flex;
+      flex-direction: column;
       gap: 6px;
     }
 
-    .brand h1{
+    .brand h1 {
       font-weight: 1000;
       text-transform: uppercase;
       letter-spacing: 0.6px;
@@ -86,9 +97,8 @@
       line-height: 1.0;
     }
 
-    /* One clean instruction line (no paragraph wall) */
-    .brand p{
-      color: var(--muted);
+    .brand p {
+      color: rgba(255,255,255,0.9);
       line-height: 1.2;
       font-size: clamp(0.86rem, 1.2vw, 0.98rem);
       white-space: nowrap;
@@ -96,16 +106,16 @@
       text-overflow: ellipsis;
     }
 
-    .controls{
-      display:flex;
-      align-items:center;
+    .controls {
+      display: flex;
+      align-items: center;
       gap: 8px;
       flex-wrap: wrap;
-      justify-content:flex-end;
+      justify-content: flex-end;
     }
 
-    .chip{
-      background: rgba(255,255,255,0.80);
+    .chip {
+      background: rgba(255,255,255,0.90);
       border: 1px solid var(--line);
       border-radius: 999px;
       padding: 7px 10px;
@@ -113,143 +123,147 @@
       letter-spacing: 0.2px;
       white-space: nowrap;
       font-size: 0.88rem;
+      color: var(--ink);
+      text-shadow: none;
     }
 
-    .mode{
-      display:flex;
+    .mode {
+      display: flex;
       border: 1px solid var(--line);
       border-radius: 999px;
-      overflow:hidden;
-      background: rgba(255,255,255,0.80);
+      overflow: hidden;
+      background: rgba(255,255,255,0.90);
     }
-    .mode button{
+
+    .mode button {
       border: none;
       background: transparent;
       padding: 7px 12px;
       font-weight: 1000;
       text-transform: uppercase;
       letter-spacing: 0.25px;
-      cursor:pointer;
+      cursor: pointer;
       color: rgba(31,20,14,0.85);
       font-size: 0.84rem;
     }
-    .mode button.active{
-      background: rgba(255, 212, 0, 0.38);
+
+    .mode button.active {
+      background: var(--gold);
       box-shadow: inset 0 0 0 1px rgba(31,20,14,0.10);
       color: var(--ink);
     }
 
-    .btn{
+    .btn {
       border: 1px solid var(--line);
-      background: rgba(255,255,255,0.88);
+      background: rgba(255,255,255,0.90);
       border-radius: 999px;
       padding: 7px 12px;
       font-weight: 1000;
       text-transform: uppercase;
       letter-spacing: 0.25px;
-      cursor:pointer;
+      cursor: pointer;
       font-size: 0.84rem;
     }
-    .btn:active{ transform: translateY(1px); }
 
-    .targets{
-      display:flex;
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .targets {
+      display: flex;
       gap: 10px;
-      align-items:center;
-      flex-wrap:wrap;
-      border-top: 1px solid var(--line);
+      align-items: center;
+      flex-wrap: wrap;
+      border-top: 1px solid rgba(255,255,255,0.3);
       padding-top: 8px;
     }
 
-    .targets .label{
+    .targets .label {
       font-weight: 1000;
       text-transform: uppercase;
       letter-spacing: 0.35px;
-      color: rgba(31,20,14,0.85);
+      color: white;
       white-space: nowrap;
     }
 
-    /* Desktop: wrap (no scrollbar). Mobile: swipe-scroll (scrollbar hidden). */
-    #targetContainer{
-      display:flex;
+    #targetContainer {
+      display: flex;
       gap: 8px;
-      align-items:center;
+      align-items: center;
       flex: 1;
       flex-wrap: wrap;
       overflow: hidden;
     }
-    @media (max-width: 720px){
-      #targetContainer{
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        overflow-y: hidden;
-        -webkit-overflow-scrolling: touch;
-        padding-bottom: 2px;
-      }
-      #targetContainer::-webkit-scrollbar{ height: 0px; }
-      #targetContainer{ scrollbar-width: none; }
-    }
 
-    .target-tag{
-      display:flex;
-      align-items:center;
+    .target-tag {
+      display: flex;
+      align-items: center;
       gap: 10px;
       padding: 7px 10px;
       border-radius: 999px;
       border: 1px solid var(--line);
-      background: rgba(255,255,255,0.90);
-      height: 62px; /* locked */
+      background: rgba(255,255,255,0.95);
+      height: 62px;
       min-width: 280px;
       max-width: 360px;
       flex: 1 1 280px;
+      transition: all 0.2s ease;
     }
 
-    .target-tag.done{ opacity: 0.62; }
-    .target-tag.active{
-      outline: 2px solid rgba(255, 212, 0, 0.55);
+    .target-tag.done {
+      opacity: 0.62;
+    }
+
+    .target-tag.active {
+      outline: 4px solid var(--gold);
       outline-offset: 2px;
+      transform: scale(1.02);
+      box-shadow: 0 0 20px var(--gold);
     }
 
-    .target-tag img{
+    .target-tag img {
       width: 46px;
       height: 46px;
       object-fit: contain;
       flex: 0 0 auto;
     }
 
-    .target-meta{
-      display:flex;
-      flex-direction:column;
+    .target-meta {
+      display: flex;
+      flex-direction: column;
       gap: 2px;
       min-width: 0;
       flex: 1;
     }
 
-    .target-meta .name{
+    .target-meta .name {
       font-weight: 1000;
       text-transform: uppercase;
       letter-spacing: 0.25px;
       font-size: 0.92rem;
       line-height: 1.05;
       white-space: nowrap;
-      overflow:hidden;
+      overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    .target-meta .meaning{
-      display:block;
-      visibility:hidden; /* reserved space, no jump */
+    .target-meta .meaning {
+      display: block;
+      visibility: hidden;
       height: 1.1em;
       color: var(--muted);
       font-size: 0.80rem;
       line-height: 1.1;
       white-space: nowrap;
-      overflow:hidden;
+      overflow: hidden;
       text-overflow: ellipsis;
     }
-    .target-tag.done .target-meta .meaning{ visibility: visible; }
 
-    .pill{
+    .target-tag.done .target-meta .meaning {
+      visibility: visible;
+    }
+
+    .pill {
       border: 1px solid var(--line);
       background: rgba(255,255,255,0.76);
       border-radius: 999px;
@@ -262,91 +276,93 @@
       flex: 0 0 auto;
     }
 
-    .color-dot{
+    .color-dot {
       width: 12px;
       height: 12px;
       border-radius: 50%;
       border: 1px solid rgba(31,20,14,0.12);
       flex: 0 0 auto;
     }
-    .dot-red{ background:#ff2d2d; }
-    .dot-yellow{ background:#ffd400; }
-    .dot-blue{ background:#0066ff; }
-    .dot-green{ background:#00b050; }
 
-    .machine{
+    .dot-red { background: #ff2d2d; }
+    .dot-yellow { background: #ffd400; }
+    .dot-blue { background: #0066ff; }
+    .dot-green { background: #00b050; }
+
+    .machine {
       position: relative;
-      border: 1px solid var(--line);
-      border-radius: var(--r);
-      background: linear-gradient(180deg, rgba(255,255,255,0.58), rgba(255,255,255,0.36));
-      box-shadow: var(--shadow);
+      border: 8px solid #4a3729;
+      border-radius: 20px;
+      background: linear-gradient(145deg, #2a1e14, #1a120b);
+      box-shadow:
+        0 20px 30px rgba(0,0,0,0.5),
+        inset 0 0 20px rgba(212, 175, 55, 0.3);
       padding: 10px;
-      overflow:hidden;
+      overflow: hidden;
       flex: 1 1 auto;
-      min-height: 0; /* critical for flex children */
+      min-height: 0;
       transition: opacity 180ms ease;
     }
 
-    .window{
-      position:absolute;
+    .window {
+      position: absolute;
       left: 50%;
       top: 10px;
       bottom: 10px;
       width: var(--windowW);
       transform: translateX(-50%);
       border-radius: 0px;
-      border: 3px solid rgba(31,20,14,0.35);
+      border: 4px solid var(--gold);
       box-shadow:
         inset 0 0 0 2px rgba(255,255,255,0.65),
-        0 10px 18px rgba(0,0,0,0.10);
-      pointer-events:none;
+        0 0 20px var(--gold);
+      pointer-events: none;
       z-index: 4;
+      animation: windowPulse 2s infinite;
     }
 
-    .lane{
+    @keyframes windowPulse {
+      0% { border-color: var(--gold); opacity: 0.8; }
+      50% { border-color: #FFD700; opacity: 1; box-shadow: 0 0 30px gold; }
+      100% { border-color: var(--gold); opacity: 0.8; }
+    }
+
+    /* ✅ FIXED: no duplicate ::before / ::after conflict.
+       We keep the track decoration in ::before and do the fades via layered backgrounds. */
+    .lane {
       position: relative;
-      overflow:hidden;
+      overflow: hidden;
       border-radius: 0px;
       border: 1px solid rgba(31,20,14,0.18);
-      background: rgba(255,255,255,0.94);
+      background:
+        linear-gradient(to right, rgba(242,228,214,0.98), rgba(242,228,214,0) 70px),
+        linear-gradient(to left,  rgba(242,228,214,0.98), rgba(242,228,214,0) 70px),
+        rgba(255,255,255,0.94);
       padding: var(--lanePadY) 0;
       margin: var(--laneGap) 0;
     }
 
-    .lane::before,
-    .lane::after{
-      content:"";
-      position:absolute;
-      top:0; bottom:0;
-      width: 70px;
-      z-index: 2;
-      pointer-events:none;
-    }
-    .lane::before{
-      left:0;
-      background: linear-gradient(to right, rgba(242,228,214,0.98), rgba(242,228,214,0));
-    }
-    .lane::after{
-      right:0;
-      background: linear-gradient(to left, rgba(242,228,214,0.98), rgba(242,228,214,0));
+    .lane::before {
+      content: "▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬";
+      color: rgba(0,0,0,0.1);
+      font-size: 20px;
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      letter-spacing: 20px;
+      bottom: 0;
+      pointer-events: none;
+      z-index: 1;
     }
 
-    .lane.good{
+    .lane.good {
       border-color: rgba(42,157,88,0.95);
       box-shadow: inset 0 0 0 2px rgba(42,157,88,0.14);
     }
-    .lane.bad{
-      border-color: rgba(214,69,69,0.95);
-      box-shadow: inset 0 0 0 2px rgba(214,69,69,0.12);
-    }
-    .lane.paused{
-      border-color: rgba(31,20,14,0.30);
-      background: rgba(255,255,255,0.98);
-    }
 
-    .moving-row{
-      display:flex;
-      align-items:center;
+    .moving-row {
+      display: flex;
+      align-items: center;
       gap: 14px;
       width: max-content;
       will-change: transform;
@@ -355,66 +371,76 @@
       animation-iteration-count: infinite;
       animation-play-state: running;
     }
-    .moving-row.ltr{ animation-name: scroll-ltr; }
-    .moving-row.rtl{ animation-name: scroll-rtl; }
 
-    @keyframes scroll-ltr{
-      from{ transform: translateX(-50%); }
-      to{ transform: translateX(0); }
-    }
-    @keyframes scroll-rtl{
-      from{ transform: translateX(0); }
-      to{ transform: translateX(-50%); }
+    .moving-row.ltr { animation-name: scroll-ltr; }
+    .moving-row.rtl { animation-name: scroll-rtl; }
+
+    @keyframes scroll-ltr {
+      from { transform: translateX(0); }
+      to { transform: translateX(-33.333%); }
     }
 
-    .symbol{
+    @keyframes scroll-rtl {
+      from { transform: translateX(-33.333%); }
+      to { transform: translateX(0); }
+    }
+
+    .symbol {
       width: clamp(var(--symbolMin), 7vw, var(--symbolMax));
       height: clamp(var(--symbolMin), 7vw, var(--symbolMax));
       object-fit: contain;
-      cursor:pointer;
-      user-select:none;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none; /* ✅ iOS polish */
       transform: translateZ(0);
-      transition: transform 80ms ease;
-    }
-    .symbol:active{ transform: scale(0.92); }
-
-    .symbol.target{
-      outline: 2px solid rgba(255, 212, 0, 0.55);
-      outline-offset: 2px;
-      box-shadow: 0 0 10px rgba(255, 212, 0, 0.72);
+      transition: all 0.1s ease;
+      pointer-events: auto;
+      touch-action: manipulation;
       border-radius: 8px;
     }
 
-    .shake{ animation: shake 260ms ease-in-out; }
-    @keyframes shake{
-      0%,100%{ transform: translateX(0); }
-      25%{ transform: translateX(-8px); }
-      50%{ transform: translateX(8px); }
-      75%{ transform: translateX(-4px); }
+    .symbol:active {
+      transform: scale(0.9);
+      opacity: 0.8;
     }
 
-    /* Filters live ONLY here (not on .symbol) */
-    .c-bw{
+    .symbol.in-window {
+      filter: drop-shadow(0 0 12px var(--gold));
+      transform: scale(1.08);
+      transition: all 0.1s ease;
+    }
+
+    .symbol.target-highlight {
+      outline: 3px solid var(--gold);
+      outline-offset: 3px;
+      box-shadow: 0 0 20px gold;
+    }
+
+    .c-bw {
       filter: drop-shadow(0 2px 3px rgba(0,0,0,0.10));
     }
-    .c-red{
+
+    .c-red {
       filter: brightness(0) saturate(100%) invert(15%) sepia(97%) saturate(6000%) hue-rotate(355deg) brightness(100%) contrast(110%)
               drop-shadow(0 2px 3px rgba(0,0,0,0.10));
     }
-    .c-yellow{
+
+    .c-yellow {
       filter: brightness(0) saturate(100%) invert(80%) sepia(90%) saturate(1500%) hue-rotate(5deg) brightness(105%) contrast(105%)
               drop-shadow(0 2px 3px rgba(0,0,0,0.10));
     }
-    .c-blue{
+
+    .c-blue {
       filter: brightness(0) saturate(100%) invert(25%) sepia(95%) saturate(2500%) hue-rotate(200deg) brightness(100%) contrast(110%)
               drop-shadow(0 2px 3px rgba(0,0,0,0.10));
     }
-    .c-green{
+
+    .c-green {
       filter: brightness(0) saturate(100%) invert(45%) sepia(85%) saturate(900%) hue-rotate(90deg) brightness(100%) contrast(110%)
               drop-shadow(0 2px 3px rgba(0,0,0,0.10));
     }
 
-    .toast{
+    .toast {
       position: fixed;
       left: 50%;
       bottom: 10px;
@@ -427,15 +453,121 @@
       font-weight: 1000;
       text-transform: uppercase;
       letter-spacing: 0.25px;
-      display:none;
+      display: none;
       z-index: 999;
       max-width: min(92vw, 820px);
-      text-align:center;
+      text-align: center;
       white-space: nowrap;
-      overflow:hidden;
+      overflow: hidden;
       text-overflow: ellipsis;
     }
-    .toast.show{ display:block; }
+
+    .toast.show { display: block; }
+
+    /* Tutorial overlay */
+    .tutorial-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      animation: fadeIn 0.3s;
+    }
+
+    .tutorial-card {
+      background: var(--bg);
+      padding: 30px;
+      border-radius: 20px;
+      max-width: 400px;
+      text-align: center;
+      border: 4px solid var(--gold);
+      box-shadow: 0 0 30px gold;
+    }
+
+    .tutorial-card h2 {
+      color: var(--earth);
+      margin-bottom: 20px;
+      font-size: 28px;
+    }
+
+    .tutorial-card ul {
+      text-align: left;
+      margin: 20px 0;
+      list-style-type: none;
+    }
+
+    .tutorial-card li {
+      margin: 15px 0;
+      padding-left: 30px;
+      position: relative;
+      font-size: 18px;
+    }
+
+    .tutorial-card li::before {
+      content: "👆";
+      position: absolute;
+      left: 0;
+    }
+
+    .tutorial-card li:nth-child(2)::before { content: "🎯"; }
+    .tutorial-card li:nth-child(3)::before { content: "✨"; }
+
+    .tutorial-btn {
+      background: var(--gold);
+      border: none;
+      padding: 15px 30px;
+      border-radius: 50px;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 20px;
+      border-bottom: 4px solid var(--earth);
+    }
+
+    .tutorial-btn:active {
+      transform: translateY(2px);
+      border-bottom-width: 2px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Level 1 tutorial hint */
+    .tutorial-hint {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+      text-shadow: 2px 2px 0 black;
+      z-index: 10;
+      animation: bounce 1s infinite;
+      pointer-events: none;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translate(-50%, -50%); }
+      50% { transform: translate(-50%, -60%); }
+    }
+
+    .success-flash {
+      animation: successFlash 0.3s ease;
+    }
+
+    @keyframes successFlash {
+      0% { background-color: rgba(212, 175, 55, 0); }
+      50% { background-color: rgba(212, 175, 55, 0.3); }
+      100% { background-color: rgba(212, 175, 55, 0); }
+    }
   </style>
 </head>
 
@@ -445,7 +577,7 @@
       <div class="top-header">
         <div class="brand">
           <h1>Adinkra Movers</h1>
-          <p>Tap the matching symbol inside the window. Clear each row to advance.</p>
+          <p>Tap the matching symbol in the golden window</p>
         </div>
 
         <div class="controls">
@@ -471,6 +603,7 @@
     <div class="machine" id="machine">
       <div class="window" id="slotWindow" aria-hidden="true"></div>
       <div id="rowsArea"></div>
+      <div class="tutorial-hint" id="tutorialHint">👆 TAP HERE</div>
     </div>
   </div>
 
@@ -481,7 +614,7 @@
       { name: "Sankofa", file: "Sankofa-egg.png", meaning: "Return and get it" },
       { name: "Dwennimmen", file: "Dwennimmen.png", meaning: "Strength & humility" },
       { name: "Gye Nyame", file: "Gye-Nyame.png", meaning: "Supremacy of God" },
-      { name: "Akoma", file: "Akoma-d.png", meaning: "Love & patience" },
+      { name: "Akoma", file: "Akoma-view.png", meaning: "Love & patience" },
       { name: "Duafe", file: "Duafe-beauty.png", meaning: "Beauty & care" },
       { name: "Odo Nyera", file: "love-will.png", meaning: "Eternal love" }
     ];
@@ -489,16 +622,15 @@
     const COLORS = ["red", "yellow", "blue", "green"];
     const MODES = { NORMAL: "NORMAL", HARD: "HARD" };
 
-    // fairness: target should show at least once every X seconds
     const TARGET_APPEAR_EVERY_SECONDS = 2.2;
 
     const LEVELS = [
-      { level: 1, rows: 1, useColors: false, levelTimeSeconds: 20, baseSpeedSeconds: 12, baseLen: 22, coloredDistractors: false },
-      { level: 2, rows: 2, useColors: false, levelTimeSeconds: 22, baseSpeedSeconds: 12, baseLen: 22, coloredDistractors: false },
-      { level: 3, rows: 3, useColors: false, levelTimeSeconds: 24, baseSpeedSeconds: 11, baseLen: 24, coloredDistractors: false },
-      { level: 4, rows: 3, useColors: true,  levelTimeSeconds: 24, baseSpeedSeconds: 10, baseLen: 24, coloredDistractors: false },
-      { level: 5, rows: 4, useColors: true,  levelTimeSeconds: 24, baseSpeedSeconds: 9,  baseLen: 26, coloredDistractors: false },
-      { level: 6, rows: 4, useColors: true,  levelTimeSeconds: 24, baseSpeedSeconds: 8,  baseLen: 26, coloredDistractors: true, coloredDistractorRate: 0.18 }
+      { level: 1, rows: 1, useColors: false, levelTimeSeconds: 30, baseSpeedSeconds: 15, baseLen: 24, coloredDistractors: false },
+      { level: 2, rows: 2, useColors: false, levelTimeSeconds: 25, baseSpeedSeconds: 13, baseLen: 24, coloredDistractors: false },
+      { level: 3, rows: 3, useColors: false, levelTimeSeconds: 24, baseSpeedSeconds: 12, baseLen: 24, coloredDistractors: false },
+      { level: 4, rows: 3, useColors: true,  levelTimeSeconds: 24, baseSpeedSeconds: 11, baseLen: 24, coloredDistractors: false },
+      { level: 5, rows: 4, useColors: true,  levelTimeSeconds: 24, baseSpeedSeconds: 10, baseLen: 26, coloredDistractors: false },
+      { level: 6, rows: 4, useColors: true,  levelTimeSeconds: 24, baseSpeedSeconds: 9,  baseLen: 26, coloredDistractors: true, coloredDistractorRate: 0.18 }
     ];
 
     const topEl = document.getElementById("top");
@@ -513,18 +645,52 @@
     const toast = document.getElementById("toast");
     const modeNormalBtn = document.getElementById("modeNormal");
     const modeHardBtn = document.getElementById("modeHard");
+    const tutorialHint = document.getElementById("tutorialHint");
 
     let currentLevelIndex = 0;
     let mode = MODES.NORMAL;
-
-    let targets = [];         // { rowIndex, symbolName, color, done }
-    let activeRowIndex = 0;   // hard mode ordering
-
+    let targets = [];
+    let activeRowIndex = 0;
     let levelComplete = false;
     let secondsLeft = 0;
     let timerId = null;
-
     let audioCtx = null;
+    let firstSuccessThisLevel = true;
+
+    function showToast(msg, ms = 1500) {
+      toast.textContent = msg;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), ms);
+    }
+
+    function showTutorial() {
+      if (localStorage.getItem('adinkraTutorialShown')) return;
+
+      const overlay = document.createElement('div');
+      overlay.className = 'tutorial-overlay';
+      overlay.innerHTML = `
+        <div class="tutorial-card">
+          <h2>🎮 Welcome!</h2>
+          <ul>
+            <li>Watch symbols move through the <span style="color: var(--gold);">★ GOLDEN WINDOW ★</span></li>
+            <li>Tap when you see the matching symbol</li>
+            <li>Complete all targets to advance</li>
+          </ul>
+          <p style="color: var(--earth);">Level 1 is slow to learn. Take your time!</p>
+          <button class="tutorial-btn" id="startTutorial">Let's Play!</button>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+
+      document.getElementById('startTutorial').addEventListener('click', () => {
+        overlay.remove();
+        localStorage.setItem('adinkraTutorialShown', 'true');
+        tutorialHint.style.display = 'block';
+        setTimeout(() => {
+          tutorialHint.style.display = 'none';
+        }, 5000);
+      });
+    }
 
     function preloadImages() {
       for (const s of SYMBOLS) {
@@ -533,10 +699,28 @@
       }
     }
 
-    function showToast(msg, ms = 900) {
-      toast.textContent = msg;
-      toast.classList.add("show");
-      setTimeout(() => toast.classList.remove("show"), ms);
+    function attachImageFallback(img, originalFile) {
+      const attempts = new Set();
+      const candidates = [
+        originalFile,
+        originalFile.replace(/-view(?=\.)/i, "-d"),
+        originalFile.replace(/-d(?=\.)/i, "-view"),
+        originalFile.replace(/_/g, "-"),
+        originalFile.replace(/-/g, "_"),
+        originalFile.toLowerCase(),
+      ];
+
+      let idx = 0;
+      img.addEventListener("error", () => {
+        while (idx < candidates.length && attempts.has(candidates[idx])) idx++;
+        if (idx >= candidates.length) {
+          console.warn("Image failed to load after fallbacks:", originalFile);
+          return;
+        }
+        const next = candidates[idx++];
+        attempts.add(next);
+        img.src = `images/${next}`;
+      });
     }
 
     function getSymbol(name) {
@@ -563,27 +747,46 @@
       return "dot-" + color;
     }
 
-    function isInsideSlotWindow(imgEl) {
-      const w = slotWindow.getBoundingClientRect();
-      const r = imgEl.getBoundingClientRect();
-      const cx = r.left + (r.width / 2);
-      const cy = r.top + (r.height / 2);
-      return cx >= w.left && cx <= w.right && cy >= w.top && cy <= w.bottom;
+    function isInWindow(imgEl) {
+      const windowRect = slotWindow.getBoundingClientRect();
+      const imgRect = imgEl.getBoundingClientRect();
+
+      const imgCenterX = imgRect.left + imgRect.width / 2;
+      const imgCenterY = imgRect.top + imgRect.height / 2;
+
+      return imgCenterX >= windowRect.left &&
+             imgCenterX <= windowRect.right &&
+             imgCenterY >= windowRect.top &&
+             imgCenterY <= windowRect.bottom;
     }
+
+    // ✅ PERFORMANCE: Highlight only relevant symbols (Hard = active row only),
+    // and throttle to 100ms instead of 50ms.
+    function updateWindowHighlights() {
+      const selector =
+        (mode === MODES.HARD)
+          ? `.moving-row[data-row="${activeRowIndex}"] .symbol`
+          : `.symbol`;
+
+      document.querySelectorAll(selector).forEach(img => {
+        img.classList.toggle('in-window', isInWindow(img));
+      });
+    }
+    setInterval(updateWindowHighlights, 100);
 
     function flashLane(rowIndex, kind) {
       const lane = document.querySelector(`.lane[data-row="${rowIndex}"]`);
       if (!lane) return;
       lane.classList.remove("good", "bad");
-      lane.classList.add(kind === "bad" ? "bad" : "good");
-      setTimeout(() => lane.classList.remove("good", "bad"), 220);
+      if (kind === "good") {
+        lane.classList.add("good");
+        setTimeout(() => lane.classList.remove("good"), 220);
+      }
     }
 
     function pauseRow(rowIndex) {
       const row = document.querySelector(`.moving-row[data-row="${rowIndex}"]`);
-      const lane = document.querySelector(`.lane[data-row="${rowIndex}"]`);
       if (row) row.style.animationPlayState = "paused";
-      if (lane) lane.classList.add("paused");
     }
 
     function setAllRowsState(state) {
@@ -594,23 +797,41 @@
       try {
         audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
         const t = audioCtx.currentTime;
-
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
 
-        osc.type = "sine";
-        osc.frequency.setValueAtTime(correct ? 860 : 240, t);
+        if (correct) {
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(523.25, t); // C5
+          osc.frequency.setValueAtTime(659.25, t + 0.05); // E5
+          osc.frequency.setValueAtTime(783.99, t + 0.1); // G5
 
-        gain.gain.setValueAtTime(0.0001, t);
-        gain.gain.exponentialRampToValueAtTime(0.055, t + 0.01);
-        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.11);
+          gain.gain.setValueAtTime(0.0001, t);
+          gain.gain.exponentialRampToValueAtTime(0.08, t + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.06, t + 0.15);
+          gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.25);
+        } else {
+          return; // silent
+        }
 
         osc.connect(gain);
         gain.connect(audioCtx.destination);
-
         osc.start(t);
-        osc.stop(t + 0.12);
+        osc.stop(t + 0.25);
       } catch (_) {}
+    }
+
+    function celebrateSuccess(img) {
+      document.body.classList.add('success-flash');
+      setTimeout(() => document.body.classList.remove('success-flash'), 300);
+
+      img.style.transform = 'scale(1.2)';
+      setTimeout(() => img.style.transform = '', 150);
+
+      if (firstSuccessThisLevel) {
+        showToast("✨ PERFECT! ✨", 800);
+        firstSuccessThisLevel = false;
+      }
     }
 
     function stopTimer() {
@@ -629,7 +850,7 @@
         if (secondsLeft <= 0) {
           secondsLeft = 0;
           updateHUD();
-          showToast("Time’s up — try again", 1100);
+          showToast("⏰ Time's up — try again", 1100);
           restartLevel();
           return;
         }
@@ -646,17 +867,13 @@
     }
 
     function applyResponsiveSizing(levelRows) {
-      // Fit all lanes into the available height so the bottom row isn't cut off.
       const root = document.documentElement.style;
       const vh = window.innerHeight || 800;
-
-      // Available vertical space for the machine area
       const topH = topEl.getBoundingClientRect().height;
-      const paddingAndGaps = 10 /* wrap padding */ * 2 + 10 /* wrap gap-ish */;
+      const paddingAndGaps = 10 * 2 + 10;
       const machineAvailable = Math.max(240, vh - topH - paddingAndGaps);
 
-      // Symbol sizing driven by available height and row count
-      const maxSymbol = Math.min(130, Math.floor(machineAvailable / (levelRows * 1.45)));
+      const maxSymbol = Math.min(120, Math.floor(machineAvailable / (levelRows * 1.45)));
       const minSymbol = Math.max(52, Math.floor(maxSymbol * 0.78));
       const pad = Math.max(4, Math.floor(maxSymbol * 0.10));
       const gap = Math.max(4, Math.floor(maxSymbol * 0.10));
@@ -703,21 +920,20 @@
     }
 
     function buildRowSequence({ level, speedSeconds, baseLen, targetName, targetColor }) {
-      const items = new Array(baseLen).fill(null);
-
+      const pattern = new Array(baseLen).fill(null);
       const targetCount = computeTargetCount(level, speedSeconds, baseLen);
       const positions = pickTargetPositionsEven({ baseLen, targetCount });
 
       for (const p of positions) {
-        items[p] = { name: targetName, color: level.useColors ? targetColor : "bw", isTarget: true };
+        pattern[p] = { name: targetName, color: level.useColors ? targetColor : "bw", isTarget: true };
       }
 
       let last = null;
       let streak = 0;
 
       for (let i = 0; i < baseLen; i++) {
-        if (items[i]) {
-          const nm = items[i].name;
+        if (pattern[i]) {
+          const nm = pattern[i].name;
           if (nm === last) streak += 1;
           else { last = nm; streak = 1; }
           continue;
@@ -742,13 +958,13 @@
           }
         }
 
-        items[i] = { name: pick, color, isTarget: false };
+        pattern[i] = { name: pick, color, isTarget: false };
 
         if (pick === last) streak += 1;
         else { last = pick; streak = 1; }
       }
 
-      return items.concat(items);
+      return [...pattern, ...pattern, ...pattern];
     }
 
     function renderTargets() {
@@ -773,6 +989,7 @@
         img.alt = symbol.name;
         img.src = `images/${symbol.file}`;
         img.classList.add(colorClass(t.color));
+        attachImageFallback(img, symbol.file);
 
         const dot = document.createElement("div");
         dot.className = "color-dot " + (t.color === "bw" ? "" : dotClass(t.color));
@@ -811,70 +1028,50 @@
       levelComplete = true;
       stopTimer();
       setAllRowsState("paused");
-
       const levelNum = LEVELS[currentLevelIndex].level;
-      showToast(`Level ${levelNum} cleared`, 1000);
+      showToast(`🎉 LEVEL ${levelNum} CLEARED! 🎉`, 1200);
 
       setTimeout(() => {
-        const next = (currentLevelIndex >= LEVELS.length - 1) ? 0 : (currentLevelIndex + 1);
-        currentLevelIndex = next;
+        currentLevelIndex = (currentLevelIndex >= LEVELS.length - 1) ? 0 : (currentLevelIndex + 1);
         machineEl.style.opacity = "0";
         setTimeout(() => {
           buildLevel(currentLevelIndex);
           machineEl.style.opacity = "1";
         }, 180);
-      }, 900);
+      }, 850);
     }
 
-    function onSymbolClick(e) {
+    function handleSymbolClick(img) {
       if (levelComplete) return;
 
-      const img = e.currentTarget;
       const rowIndex = Number(img.dataset.row);
       const name = img.dataset.name;
       const color = img.dataset.color;
 
-      // IMPORTANT: if player clicks but it's outside the window, show obvious feedback
-      if (!isInsideSlotWindow(img)) {
-        beep(false);
-        flashLane(rowIndex, "bad");
-        img.classList.add("shake");
-        setTimeout(() => img.classList.remove("shake"), 260);
-        showToast("Tap inside the window", 750);
-        return;
+      // ✅ UX: in Level 1 only, give a hint if tapped outside the window.
+      if (!isInWindow(img)) {
+        if (LEVELS[currentLevelIndex].level === 1) {
+          showToast("Tap when it's inside the GOLD window", 700);
+        }
+        return; // silent fail otherwise
       }
 
       if (mode === MODES.HARD && rowIndex !== activeRowIndex) {
-        beep(false);
-        flashLane(rowIndex, "bad");
-        img.classList.add("shake");
-        setTimeout(() => img.classList.remove("shake"), 260);
-        showToast("Hard mode: solve in order", 750);
-        return;
+        return; // silent fail
       }
 
       const target = targets.find(t => t.rowIndex === rowIndex);
-      if (!target || target.done) {
-        beep(false);
-        flashLane(rowIndex, "bad");
-        img.classList.add("shake");
-        setTimeout(() => img.classList.remove("shake"), 260);
-        return;
-      }
+      if (!target || target.done) return;
 
       const symbolMatch = name === target.symbolName;
       const colorMatch = (target.color === "bw") ? (color === "bw") : (color === target.color);
 
       if (!symbolMatch || !colorMatch) {
-        beep(false);
-        flashLane(rowIndex, "bad");
-        img.classList.add("shake");
-        setTimeout(() => img.classList.remove("shake"), 260);
-        return;
+        return; // silent fail
       }
 
-      // Correct
       beep(true);
+      celebrateSuccess(img);
       flashLane(rowIndex, "good");
       target.done = true;
       pauseRow(rowIndex);
@@ -885,22 +1082,26 @@
       }
 
       renderTargets();
-
       if (targets.every(t => t.done)) onLevelWin();
     }
+
+    // Event delegation for clicks
+    rowsArea.addEventListener("click", (e) => {
+      const img = e.target.closest("img.symbol");
+      if (!img) return;
+      handleSymbolClick(img);
+    }, true);
 
     function buildLevel(levelIndex) {
       const level = LEVELS[levelIndex];
       if (!level) return;
 
       levelComplete = false;
+      firstSuccessThisLevel = true;
       rowsArea.innerHTML = "";
 
       targets = buildTargetsForLevel(level);
       activeRowIndex = 0;
-
-      // Size AFTER targets header is in place, then again after lanes mount
-      applyResponsiveSizing(level.rows);
 
       for (let r = 0; r < level.rows; r++) {
         const lane = document.createElement("div");
@@ -930,8 +1131,6 @@
           const el = document.createElement("img");
           el.src = `images/${s.file}`;
           el.alt = it.name;
-
-          // In levels 4–5: only targets colored. In level 6: some decoys colored.
           el.className = `symbol ${colorClass(it.color)}${it.isTarget ? " target" : ""}`;
 
           el.dataset.row = String(r);
@@ -943,7 +1142,7 @@
             it.color === "bw" ? `${it.name} black and white` : `${it.name} ${it.color}`
           );
 
-          el.addEventListener("click", onSymbolClick);
+          attachImageFallback(el, s.file);
           movingRow.appendChild(el);
         }
 
@@ -953,14 +1152,18 @@
 
       renderTargets();
 
-      // Re-measure once rows exist (prevents bottom row cutoff)
+      // ✅ Layout timing: size after DOM is built (reduces “pop”).
       requestAnimationFrame(() => applyResponsiveSizing(level.rows));
 
       setAllRowsState("running");
       startLevelTimer(level.levelTimeSeconds);
 
-      if (level.level === 4) showToast("Color unlocked", 1200);
-      if (level.level === 6) showToast("Expert: colored decoys", 1200);
+      if (levelIndex === 0 && !localStorage.getItem('adinkraTutorialShown')) {
+        tutorialHint.style.display = 'block';
+        setTimeout(() => {
+          tutorialHint.style.display = 'none';
+        }, 5000);
+      }
     }
 
     function restartLevel() {
@@ -983,21 +1186,19 @@
       activeRowIndex = next ? next.rowIndex : 0;
 
       renderTargets();
-      showToast(mode === MODES.NORMAL ? "Normal: any order" : "Hard: in order", 900);
+      showToast(mode === MODES.NORMAL ? "🎯 Normal: Any order" : "⚔️ Hard: Row by row", 700);
     }
 
     resetButton.addEventListener("click", restartFromLevel1);
     modeNormalBtn.addEventListener("click", () => setMode(MODES.NORMAL));
     modeHardBtn.addEventListener("click", () => setMode(MODES.HARD));
-
-    window.addEventListener("resize", () => {
-      applyResponsiveSizing(LEVELS[currentLevelIndex].rows);
-    });
+    window.addEventListener("resize", () => applyResponsiveSizing(LEVELS[currentLevelIndex].rows));
 
     window.onload = () => {
       preloadImages();
       setMode(MODES.NORMAL);
       buildLevel(currentLevelIndex);
+      setTimeout(showTutorial, 500);
     };
   </script>
 </body>
