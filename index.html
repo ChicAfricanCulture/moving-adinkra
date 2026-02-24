@@ -1,982 +1,422 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes"
-  />
-  <title>Adinkra Movers</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Adinkra Movers</title>
 
-  <style>
-    :root{
-      --bg: #f2e4d6;
-      --ink: #1f140e;
-      --muted: rgba(31, 20, 14, 0.70);
+<style>
+:root{
+  --bg:#f2e4d6;
+  --ink:#1f140e;
+  --muted:rgba(31,20,14,0.7);
+  --line:rgba(31,20,14,0.16);
+  --shadow:0 12px 26px rgba(0,0,0,0.12);
 
-      /* Softer “infographic” surface */
-      --paper: rgba(255,255,255,0.66);
-      --paper2: rgba(255,255,255,0.40);
-      --line: rgba(31,20,14,0.16);
+  --windowW:clamp(220px,36vw,340px);
 
-      --accent: #d2a24c;
-      --good: #2a9d58;
-      --bad: #d64545;
-
-      /* Crisp geometry */
-      --r0: 0px;
-      --r1: 10px;
-
-      --shadow: 0 12px 26px rgba(0,0,0,0.12);
-
-      /* Responsive sizing set by JS */
-      --lanePadY: 10px;
-      --symbolMin: 86px;
-      --symbolMax: 112px;
-      --laneGap: 10px;
-
-      /* Bigger slot window */
-      --windowW: clamp(210px, 34vw, 320px);
-    }
-
-    *{ box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color: transparent; }
-    body{
-      font-family: system-ui, -apple-system, sans-serif;
-      background: var(--bg);
-      color: var(--ink);
-      min-height: 100vh;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      padding: 14px;
-    }
-
-    .wrap{
-      width: min(920px, 100%);
-      display:flex;
-      flex-direction:column;
-      gap: 12px;
-    }
-
-    /* Cohesive top strip */
-    .top{
-      background: linear-gradient(180deg, var(--paper), var(--paper2));
-      border: 1px solid var(--line);
-      border-radius: var(--r1);
-      box-shadow: var(--shadow);
-      padding: 12px 12px 10px 12px;
-      display:flex;
-      flex-direction:column;
-      gap: 10px;
-    }
-
-    .top-header{
-      display:flex;
-      gap: 10px;
-      align-items:flex-start;
-      justify-content:space-between;
-      flex-wrap:wrap;
-    }
-
-    .brand{
-      display:flex;
-      flex-direction:column;
-      gap: 5px;
-      min-width: 240px;
-      flex: 1;
-    }
-
-    .brand h1{
-      font-weight: 1000;
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-      font-size: clamp(1.1rem, 2.0vw, 1.55rem);
-      line-height: 1.0;
-    }
-
-    .brand p{
-      color: var(--muted);
-      line-height: 1.22;
-      font-size: clamp(0.92rem, 1.6vw, 1.02rem);
-    }
-
-    .stats{
-      display:flex;
-      align-items:center;
-      gap: 8px;
-      flex-wrap: wrap;
-      justify-content:flex-end;
-    }
-
-    .stat{
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,0.75);
-      border-radius: 999px;
-      padding: 8px 10px;
-      font-weight: 900;
-      letter-spacing: 0.2px;
-      white-space: nowrap;
-      font-size: 0.95rem;
-    }
-
-    /* Segmented mode control (Normal/Hard) */
-    .mode{
-      display:flex;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      overflow:hidden;
-      background: rgba(255,255,255,0.70);
-    }
-    .mode button{
-      appearance: none;
-      border: none;
-      background: transparent;
-      padding: 8px 12px;
-      font-weight: 1000;
-      text-transform: uppercase;
-      letter-spacing: 0.25px;
-      cursor:pointer;
-      color: rgba(31,20,14,0.85);
-      font-size: 0.9rem;
-    }
-    .mode button.active{
-      background: rgba(210,162,76,0.25);
-      box-shadow: inset 0 0 0 1px rgba(31,20,14,0.14);
-      color: var(--ink);
-    }
-
-    /* Targets strip (clean, less boxed) */
-    .targets{
-      display:flex;
-      gap: 10px;
-      align-items:center;
-      flex-wrap:wrap;
-      border-top: 1px solid var(--line);
-      padding-top: 10px;
-    }
-
-    .targets .label{
-      font-weight: 1000;
-      text-transform: uppercase;
-      letter-spacing: 0.35px;
-      color: rgba(31,20,14,0.85);
-      white-space: nowrap;
-    }
-
-    #targetContainer{
-      display:flex;
-      flex-wrap:wrap;
-      gap: 8px;
-      align-items:center;
-      flex: 1;
-    }
-
-    .target-tag{
-      display:flex;
-      align-items:center;
-      gap: 10px;
-      padding: 7px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,0.78);
-      min-width: 250px;
-      max-width: 360px;
-    }
-
-    .target-tag.done{
-      opacity: 0.55;
-      filter: grayscale(0.15);
-    }
-
-    .target-tag.active{
-      outline: 2px solid rgba(210,162,76,0.60);
-      outline-offset: 2px;
-    }
-
-    .target-tag img{
-      width: 50px;
-      height: 50px;
-      object-fit: contain;
-    }
-
-    .target-meta{
-      display:flex;
-      flex-direction:column;
-      gap: 2px;
-      min-width: 0;
-      flex: 1;
-    }
-
-    .target-meta .name{
-      font-weight: 1000;
-      text-transform: uppercase;
-      letter-spacing: 0.25px;
-      font-size: 0.96rem;
-      line-height: 1.05;
-    }
-
-    .target-meta .meaning{
-      color: var(--muted);
-      font-size: 0.82rem;
-      line-height: 1.1;
-      white-space: nowrap;
-      overflow:hidden;
-      text-overflow: ellipsis;
-    }
-
-    .pill{
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,0.72);
-      border-radius: 999px;
-      padding: 6px 9px;
-      font-weight: 1000;
-      text-transform: uppercase;
-      letter-spacing: 0.2px;
-      font-size: 0.78rem;
-      white-space: nowrap;
-    }
-
-    /* Machine area */
-    .machine{
-      position: relative;
-      border: 1px solid var(--line);
-      border-radius: var(--r1);
-      background: linear-gradient(180deg, rgba(255,255,255,0.52), rgba(255,255,255,0.30));
-      box-shadow: var(--shadow);
-      padding: 12px;
-      overflow:hidden;
-    }
-
-    /* Window — larger, crisp, unambiguous */
-    .window{
-      position:absolute;
-      left: 50%;
-      top: 12px;
-      bottom: 12px;
-      width: var(--windowW);
-      transform: translateX(-50%);
-      border-radius: var(--r0);
-      border: 3px solid rgba(31,20,14,0.35);
-      box-shadow:
-        inset 0 0 0 2px rgba(255,255,255,0.65),
-        0 10px 18px rgba(0,0,0,0.10);
-      pointer-events:none;
-      z-index: 4;
-    }
-
-    .lane{
-      position: relative;
-      overflow: hidden;
-      border-radius: var(--r0);
-      border: 1px solid rgba(31,20,14,0.18);
-      background: rgba(255,255,255,0.82);
-      padding: var(--lanePadY) 0;
-      margin: var(--laneGap) 0;
-    }
-
-    /* “Slot” edge fades — keep, but crisp */
-    .lane::before,
-    .lane::after{
-      content:"";
-      position:absolute;
-      top:0; bottom:0;
-      width: 70px;
-      z-index: 2;
-      pointer-events:none;
-    }
-    .lane::before{
-      left:0;
-      background: linear-gradient(to right, rgba(242,228,214,0.98), rgba(242,228,214,0));
-    }
-    .lane::after{
-      right:0;
-      background: linear-gradient(to left, rgba(242,228,214,0.98), rgba(242,228,214,0));
-    }
-
-    .lane.paused{
-      background: rgba(255,255,255,0.92);
-      border-color: rgba(31,20,14,0.30);
-    }
-
-    /* Unambiguous feedback */
-    .lane.good{
-      border-color: rgba(42,157,88,0.95);
-      box-shadow: inset 0 0 0 2px rgba(42,157,88,0.18);
-    }
-    .lane.bad{
-      border-color: rgba(214,69,69,0.95);
-      box-shadow: inset 0 0 0 2px rgba(214,69,69,0.16);
-    }
-
-    .moving-row{
-      display:flex;
-      align-items:center;
-      gap: 14px;
-      width: max-content;
-      will-change: transform;
-      animation-duration: var(--speed, 12s);
-      animation-timing-function: linear;
-      animation-iteration-count: infinite;
-      animation-play-state: running;
-    }
-
-    .moving-row.ltr{ animation-name: scroll-ltr; }
-    @keyframes scroll-ltr{
-      from{ transform: translateX(-50%); }
-      to{ transform: translateX(0); }
-    }
-    .moving-row.rtl{ animation-name: scroll-rtl; }
-    @keyframes scroll-rtl{
-      from{ transform: translateX(0); }
-      to{ transform: translateX(-50%); }
-    }
-
-    .symbol{
-      width: clamp(var(--symbolMin), 10vw, var(--symbolMax));
-      height: clamp(var(--symbolMin), 10vw, var(--symbolMax));
-      object-fit: contain;
-      cursor: pointer;
-      user-select:none;
-      transform: translateZ(0);
-      transition: transform 80ms ease;
-      z-index: 1;
-      filter: drop-shadow(0 2px 3px rgba(0,0,0,0.10));
-    }
-    .symbol:active{ transform: scale(0.92); }
-
-    .shake{ animation: shake 260ms ease-in-out; }
-    @keyframes shake{
-      0%,100%{ transform: translateX(0); }
-      25%{ transform: translateX(-8px); }
-      50%{ transform: translateX(8px); }
-      75%{ transform: translateX(-4px); }
-    }
-
- /* Keep drop-shadow at the END of the filter chain */
-.c-bw {
-  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.10));
+  --symbolMin:72px;
+  --symbolMax:110px;
 }
 
-/* “Tint” a black icon into colors */
-.c-red {
-  filter: brightness(0) saturate(100%) invert(18%) sepia(96%) saturate(7472%) hue-rotate(355deg) brightness(98%) contrast(109%)
-          drop-shadow(0 2px 3px rgba(0,0,0,0.10));
-}
-.c-yellow {
-  filter: brightness(0) saturate(100%) invert(83%) sepia(58%) saturate(1288%) hue-rotate(356deg) brightness(102%) contrast(104%)
-          drop-shadow(0 2px 3px rgba(0,0,0,0.10));
-}
-.c-blue {
-  filter: brightness(0) saturate(100%) invert(24%) sepia(95%) saturate(2280%) hue-rotate(199deg) brightness(98%) contrast(110%)
-          drop-shadow(0 2px 3px rgba(0,0,0,0.10));
-}
-.c-green {
-  filter: brightness(0) saturate(100%) invert(47%) sepia(76%) saturate(632%) hue-rotate(86deg) brightness(96%) contrast(108%)
-          drop-shadow(0 2px 3px rgba(0,0,0,0.10));
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{
+  font-family:system-ui,-apple-system,sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:16px;
 }
 
-    /* Small “toast” message instead of popups */
-    .toast{
-      position: fixed;
-      left: 50%;
-      bottom: 14px;
-      transform: translateX(-50%);
-      padding: 10px 12px;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,0.92);
-      box-shadow: var(--shadow);
-      border-radius: 999px;
-      font-weight: 1000;
-      text-transform: uppercase;
-      letter-spacing: 0.25px;
-      display:none;
-      z-index: 999;
-      max-width: min(92vw, 620px);
-      text-align:center;
-    }
-    .toast.show{ display:block; }
-    .toast.good{ border-color: rgba(42,157,88,0.55); }
-    .toast.bad{ border-color: rgba(214,69,69,0.55); }
+.wrap{
+  width:min(960px,100%);
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
 
-    @media (prefers-reduced-motion: reduce){
-      .moving-row{ animation: none; }
-    }
-  </style>
+/* HEADER STRIP */
+.top{
+  background:rgba(255,255,255,0.7);
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:14px;
+  box-shadow:var(--shadow);
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.top-header{
+  display:flex;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+.brand h1{
+  font-weight:1000;
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+}
+
+.brand p{
+  color:var(--muted);
+  font-size:0.95rem;
+  margin-top:4px;
+}
+
+.stats{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.stat{
+  background:white;
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:8px 10px;
+  font-weight:1000;
+  font-size:0.9rem;
+}
+
+.mode{
+  display:flex;
+  border:1px solid var(--line);
+  border-radius:999px;
+  overflow:hidden;
+  background:white;
+}
+
+.mode button{
+  border:none;
+  background:transparent;
+  padding:8px 12px;
+  font-weight:1000;
+  cursor:pointer;
+}
+
+.mode button.active{
+  background:#ffd400;
+}
+
+/* TARGET STRIP */
+.targets{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+  border-top:1px solid var(--line);
+  padding-top:10px;
+}
+
+.target{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  background:white;
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:6px 10px;
+}
+
+.target.done{opacity:0.5;}
+
+.target img{
+  width:46px;
+  height:46px;
+  object-fit:contain;
+}
+
+/* COLOR DOT */
+.color-dot{
+  width:12px;
+  height:12px;
+  border-radius:50%;
+}
+
+.dot-red{background:#ff2d2d;}
+.dot-yellow{background:#ffd400;}
+.dot-blue{background:#0066ff;}
+.dot-green{background:#00b050;}
+
+/* MACHINE */
+.machine{
+  position:relative;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:rgba(255,255,255,0.6);
+  padding:14px;
+  box-shadow:var(--shadow);
+}
+
+.window{
+  position:absolute;
+  left:50%;
+  top:14px;
+  bottom:14px;
+  width:var(--windowW);
+  transform:translateX(-50%);
+  border:3px solid rgba(31,20,14,0.35);
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,0.6);
+  pointer-events:none;
+  z-index:4;
+}
+
+.lane{
+  overflow:hidden;
+  margin:10px 0;
+  padding:10px 0;
+  background:white;
+  border:1px solid var(--line);
+}
+
+.moving-row{
+  display:flex;
+  gap:14px;
+  width:max-content;
+  animation:scroll-ltr linear infinite;
+}
+
+.moving-row.rtl{animation-name:scroll-rtl;}
+
+@keyframes scroll-ltr{
+  from{transform:translateX(-50%);}
+  to{transform:translateX(0);}
+}
+
+@keyframes scroll-rtl{
+  from{transform:translateX(0);}
+  to{transform:translateX(-50%);}
+}
+
+.symbol{
+  width:clamp(var(--symbolMin),10vw,var(--symbolMax));
+  height:clamp(var(--symbolMin),10vw,var(--symbolMax));
+  object-fit:contain;
+  cursor:pointer;
+  transition:transform 80ms ease;
+}
+
+.symbol:active{transform:scale(0.9);}
+
+/* ===== BRIGHT PRIMARY COLOR TINTS ===== */
+.c-bw{filter:none;}
+
+.c-red{
+  filter:brightness(0) saturate(100%) invert(15%) sepia(97%) saturate(6000%) hue-rotate(355deg) brightness(100%) contrast(110%);
+}
+.c-yellow{
+  filter:brightness(0) saturate(100%) invert(80%) sepia(90%) saturate(1500%) hue-rotate(5deg) brightness(105%) contrast(105%);
+}
+.c-blue{
+  filter:brightness(0) saturate(100%) invert(25%) sepia(95%) saturate(2500%) hue-rotate(200deg) brightness(100%) contrast(110%);
+}
+.c-green{
+  filter:brightness(0) saturate(100%) invert(45%) sepia(85%) saturate(900%) hue-rotate(90deg) brightness(100%) contrast(110%);
+}
+
+.toast{
+  position:fixed;
+  bottom:14px;
+  left:50%;
+  transform:translateX(-50%);
+  background:white;
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:10px 14px;
+  font-weight:1000;
+  display:none;
+  box-shadow:var(--shadow);
+}
+
+.toast.show{display:block;}
+</style>
 </head>
-
 <body>
-  <div class="wrap">
-    <div class="top">
-      <div class="top-header">
-        <div class="brand">
-          <h1>Adinkra Movers</h1>
-          <p>
-            Tap the correct symbol on the correct row — taps only count inside the center window.
-            Each correct row pauses. Timer is per level.
-          </p>
-        </div>
 
-        <div class="stats">
-          <span class="stat" id="levelDisplay">LEVEL 1</span>
-          <span class="stat" id="progressCounter">0 / 1</span>
-          <span class="stat" id="timerPill">TIME: 0</span>
-
-          <div class="mode" aria-label="Mode">
-            <button id="modeNormal" type="button" class="active">Normal</button>
-            <button id="modeHard" type="button">Hard</button>
-          </div>
-
-          <button id="resetButton" type="button">Restart</button>
-        </div>
+<div class="wrap">
+  <div class="top">
+    <div class="top-header">
+      <div class="brand">
+        <h1>Adinkra Movers</h1>
+        <p>Tap the correct symbol inside the center window. Each correct row pauses.</p>
       </div>
+      <div class="stats">
+        <span class="stat" id="levelDisplay">LEVEL 1</span>
+        <span class="stat" id="progressCounter">0 / 1</span>
+        <span class="stat" id="timerPill">TIME: 0</span>
 
-      <div class="targets">
-        <div class="label">Find</div>
-        <div id="targetContainer"></div>
+        <div class="mode">
+          <button id="modeNormal" class="active">Normal</button>
+          <button id="modeHard">Hard</button>
+        </div>
+
+        <button id="resetButton">Restart</button>
       </div>
     </div>
 
-    <div class="machine">
-      <div class="window" id="slotWindow" aria-hidden="true"></div>
-      <div id="rowsArea"></div>
-    </div>
+    <div class="targets" id="targetContainer"></div>
   </div>
 
-  <div class="toast" id="toast"></div>
+  <div class="machine">
+    <div class="window" id="slotWindow"></div>
+    <div id="rowsArea"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SYMBOLS=[
+{name:"Sankofa",file:"Sankofa-egg.png",meaning:"Return and get it"},
+{name:"Dwennimmen",file:"Dwennimmen.png",meaning:"Strength & humility"},
+{name:"Gye Nyame",file:"Gye-Nyame.png",meaning:"Supremacy of God"},
+{name:"Akoma",file:"Akoma-d.png",meaning:"Love & patience"},
+{name:"Duafe",file:"Duafe-beauty.png",meaning:"Beauty & care"},
+{name:"Odo Nyera",file:"love-will.png",meaning:"Eternal love"}
+];
+
+const COLORS=["red","yellow","blue","green"];
+
+const LEVELS=[
+{level:1,rows:1,useColors:false,time:16,speed:12},
+{level:2,rows:2,useColors:false,time:20,speed:12},
+{level:3,rows:3,useColors:false,time:22,speed:11},
+{level:4,rows:3,useColors:true,time:22,speed:10},
+{level:5,rows:4,useColors:true,time:20,speed:9},
+{level:6,rows:4,useColors:true,time:18,speed:8}
+];
+
+let currentLevel=0;
+let targets=[];
+let activeRow=0;
+let mode="normal";
+let timer;
+let secondsLeft=0;
+
+const rowsArea=document.getElementById("rowsArea");
+const targetContainer=document.getElementById("targetContainer");
+const levelDisplay=document.getElementById("levelDisplay");
+const progressCounter=document.getElementById("progressCounter");
+const timerPill=document.getElementById("timerPill");
+const toast=document.getElementById("toast");
+const slotWindow=document.getElementById("slotWindow");
+
+function showToast(msg){
+toast.textContent=msg;
+toast.classList.add("show");
+setTimeout(()=>toast.classList.remove("show"),900);
+}
+
+function buildLevel(i){
+clearInterval(timer);
+rowsArea.innerHTML="";
+targetContainer.innerHTML="";
+const level=LEVELS[i];
+levelDisplay.textContent="LEVEL "+level.level;
+secondsLeft=level.time;
+updateTimer();
+
+targets=[];
+activeRow=0;
+
+for(let r=0;r<level.rows;r++){
+const sym=SYMBOLS[r%SYMBOLS.length];
+const color=level.useColors?COLORS[r%COLORS.length]:"bw";
+targets.push({row:r,name:sym.name,color,done:false});
+
+const lane=document.createElement("div");
+lane.className="lane";
+
+const row=document.createElement("div");
+row.className="moving-row "+(r%2?"rtl":"ltr");
+row.style.animationDuration=level.speed+"s";
+
+for(let k=0;k<14;k++){
+const s=SYMBOLS[Math.floor(Math.random()*SYMBOLS.length)];
+const img=document.createElement("img");
+img.src="images/"+s.file;
+img.className="symbol "+(level.useColors?("c-"+color):"c-bw");
+img.dataset.row=r;
+img.dataset.name=s.name;
+img.dataset.color=color;
+img.onclick=handleClick;
+row.appendChild(img);
+}
+
+lane.appendChild(row);
+rowsArea.appendChild(lane);
+}
+
+renderTargets();
+timer=setInterval(()=>{
+secondsLeft--;
+updateTimer();
+if(secondsLeft<=0){
+showToast("Time's up");
+buildLevel(currentLevel);
+}
+},1000);
+
+if(level.level===4)showToast("Color unlocked!");
+}
+
+function updateTimer(){
+timerPill.textContent="TIME: "+secondsLeft;
+}
+
+function renderTargets(){
+targetContainer.innerHTML="";
+targets.forEach(t=>{
+const div=document.createElement("div");
+div.className="target"+(t.done?" done":"");
+
+const img=document.createElement("img");
+img.src="images/"+SYMBOLS.find(s=>s.name===t.name).file;
+img.className="symbol "+(t.color!=="bw"?"c-"+t.color:"c-bw");
+
+const dot=document.createElement("div");
+dot.className="color-dot dot-"+t.color;
+
+div.appendChild(img);
+if(t.color!=="bw")div.appendChild(dot);
+
+div.append(t.name);
+targetContainer.appendChild(div);
+});
+progressCounter.textContent=targets.filter(t=>t.done).length+" / "+targets.length;
+}
+
+function handleClick(e){
+const img=e.target;
+const row=parseInt(img.dataset.row);
+const name=img.dataset.name;
+const target=targets.find(t=>t.row===row);
+if(!target||target.done)return;
+
+if(name===target.name){
+target.done=true;
+img.closest(".moving-row").style.animationPlayState="paused";
+renderTargets();
+if(targets.every(t=>t.done)){
+showToast("Level cleared");
+setTimeout(()=>{currentLevel=Math.min(currentLevel+1,LEVELS.length-1);buildLevel(currentLevel);},800);
+}
+}
+}
+
+document.getElementById("resetButton").onclick=()=>{currentLevel=0;buildLevel(currentLevel);};
+document.getElementById("modeNormal").onclick=()=>{mode="normal";};
+document.getElementById("modeHard").onclick=()=>{mode="hard";};
+
+buildLevel(currentLevel);
+</script>
 
-  <script>
-    /**
-     * Adinkra Movers — cohesive UI, no popups, global timer, Normal/Hard segmented control
-     */
-
-    const SYMBOLS = [
-      { name: "Sankofa", file: "Sankofa-egg.png", meaning: "Return and get it" },
-      { name: "Dwennimmen", file: "Dwennimmen.png", meaning: "Strength & humility" },
-      { name: "Gye Nyame", file: "Gye-Nyame.png", meaning: "Supremacy of God" },
-      { name: "Akoma", file: "Akoma-d.png", meaning: "Love & patience" },
-      { name: "Duafe", file: "Duafe-beauty.png", meaning: "Beauty & care" },
-      { name: "Odo Nyera", file: "love-will.png", meaning: "Eternal love" }
-    ];
-
-    const COLORS = ["red", "yellow", "blue", "green"];
-
-    // Max 4 rows; difficulty scales with speed + timer + colors.
-    // Level 4 “does something special”: first color introduction (kept by design).
-    const LEVELS = [
-      { level: 1, rows: 1, useColors: false, levelTimeSeconds: 16, baseSpeedSeconds: 12, symbolsPerRow: 14 },
-      { level: 2, rows: 2, useColors: false, levelTimeSeconds: 20, baseSpeedSeconds: 12, symbolsPerRow: 14 },
-      { level: 3, rows: 3, useColors: false, levelTimeSeconds: 22, baseSpeedSeconds: 11, symbolsPerRow: 15 },
-      { level: 4, rows: 3, useColors: true,  levelTimeSeconds: 22, baseSpeedSeconds: 10, symbolsPerRow: 15 },
-      { level: 5, rows: 4, useColors: true,  levelTimeSeconds: 20, baseSpeedSeconds: 9,  symbolsPerRow: 16 },
-      { level: 6, rows: 4, useColors: true,  levelTimeSeconds: 18, baseSpeedSeconds: 8,  symbolsPerRow: 16 }
-    ];
-
-    const rowsArea = document.getElementById("rowsArea");
-    const targetContainer = document.getElementById("targetContainer");
-    const levelDisplay = document.getElementById("levelDisplay");
-    const progressCounter = document.getElementById("progressCounter");
-    const timerPill = document.getElementById("timerPill");
-    const resetButton = document.getElementById("resetButton");
-    const slotWindow = document.getElementById("slotWindow");
-
-    const modeNormalBtn = document.getElementById("modeNormal");
-    const modeHardBtn = document.getElementById("modeHard");
-
-    const toast = document.getElementById("toast");
-
-    const MODES = { NORMAL: "NORMAL", HARD: "HARD" };
-
-    let currentLevelIndex = 0;
-
-    // One target per row: [{rowIndex, symbolName, color, done}]
-    let targets = [];
-    let activeRowIndex = 0; // only used in HARD mode
-
-    let paused = false; // kept for future, but no pause button
-    let levelComplete = false;
-
-    // Global timer
-    let secondsLeft = 0;
-    let timerId = null;
-
-    // Audio reuse
-    let audioCtx = null;
-
-    // Mode
-    let mode = MODES.NORMAL;
-
-    function applyResponsiveSizing(levelRows) {
-      const root = document.documentElement.style;
-
-      if (levelRows <= 2) {
-        root.setProperty("--lanePadY", "10px");
-        root.setProperty("--symbolMin", "86px");
-        root.setProperty("--symbolMax", "112px");
-        root.setProperty("--laneGap", "10px");
-      } else if (levelRows === 3) {
-        root.setProperty("--lanePadY", "9px");
-        root.setProperty("--symbolMin", "78px");
-        root.setProperty("--symbolMax", "104px");
-        root.setProperty("--laneGap", "10px");
-      } else {
-        // 4 rows (max): tuned for common Android viewports
-        root.setProperty("--lanePadY", "8px");
-        root.setProperty("--symbolMin", "68px");
-        root.setProperty("--symbolMax", "92px");
-        root.setProperty("--laneGap", "9px");
-      }
-    }
-
-    function showToast(message, kind = "good", ms = 900) {
-      toast.textContent = message;
-      toast.classList.remove("good", "bad");
-      toast.classList.add(kind === "bad" ? "bad" : "good");
-      toast.classList.add("show");
-      setTimeout(() => toast.classList.remove("show"), ms);
-    }
-
-    function getSymbol(name) {
-      return SYMBOLS.find(s => s.name === name) || null;
-    }
-
-    function buildSrc(file) {
-      return `images/${file}`;
-    }
-
-    function attachImageFallback(img, originalFile) {
-      const attempts = new Set();
-      const candidates = [
-        originalFile,
-        originalFile.replace(/-a(?=\.)/i, ""),
-        originalFile.replace(/-b(?=\.)/i, ""),
-        originalFile.replace(/-d(?=\.)/i, ""),
-        originalFile.replace(/_/g, "-"),
-        originalFile.replace(/-/g, "_"),
-        originalFile.toLowerCase(),
-        originalFile.toUpperCase()
-      ];
-
-      let idx = 0;
-
-      img.addEventListener("error", () => {
-        while (idx < candidates.length && attempts.has(candidates[idx])) idx++;
-        if (idx >= candidates.length) return;
-
-        const next = candidates[idx++];
-        attempts.add(next);
-        img.src = buildSrc(next);
-      });
-    }
-
-    function colorClass(color) {
-      switch (color) {
-        case "red": return "c-red";
-        case "yellow": return "c-yellow";
-        case "blue": return "c-blue";
-        case "green": return "c-green";
-        default: return "c-bw";
-      }
-    }
-
-    function rowDirection(rowIndex) {
-      return rowIndex % 2 === 0 ? "ltr" : "rtl";
-    }
-
-    function randomSymbolName() {
-      return SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)].name;
-    }
-
-    function randomColor(useColors) {
-      if (!useColors) return "bw";
-      return COLORS[Math.floor(Math.random() * COLORS.length)];
-    }
-
-    function isInsideSlotWindow(imgEl) {
-      const w = slotWindow.getBoundingClientRect();
-      const r = imgEl.getBoundingClientRect();
-      const cx = r.left + (r.width / 2);
-      const cy = r.top + (r.height / 2);
-      return cx >= w.left && cx <= w.right && cy >= w.top && cy <= w.bottom;
-    }
-
-    function laneEl(rowIndex) {
-      return document.querySelector(`.lane[data-row="${rowIndex}"]`);
-    }
-
-    function flashLane(rowIndex, kind) {
-      const lane = laneEl(rowIndex);
-      if (!lane) return;
-
-      lane.classList.remove("good", "bad");
-      lane.classList.add(kind === "bad" ? "bad" : "good");
-      setTimeout(() => lane.classList.remove("good", "bad"), 220);
-    }
-
-    function createSymbolImage({ symbolName, color, rowIndex }) {
-      const symbol = getSymbol(symbolName);
-      if (!symbol) return null;
-
-      const img = document.createElement("img");
-      img.className = `symbol ${colorClass(color)}`;
-      img.alt = symbolName;
-      img.dataset.symbol = symbolName;
-      img.dataset.color = color;
-      img.dataset.row = String(rowIndex);
-      img.src = buildSrc(symbol.file);
-
-      attachImageFallback(img, symbol.file);
-
-      img.addEventListener("click", onSymbolClick);
-      return img;
-    }
-
-    function pauseRow(rowIndex) {
-      const row = document.querySelector(`.moving-row[data-row="${rowIndex}"]`);
-      const lane = laneEl(rowIndex);
-      if (row) row.style.animationPlayState = "paused";
-      if (lane) lane.classList.add("paused");
-    }
-
-    function resumeRow(rowIndex) {
-      const row = document.querySelector(`.moving-row[data-row="${rowIndex}"]`);
-      const lane = laneEl(rowIndex);
-      if (row) row.style.animationPlayState = "running";
-      if (lane) lane.classList.remove("paused");
-    }
-
-    function setAllRowsState(state) {
-      document.querySelectorAll(".moving-row").forEach(r => r.style.animationPlayState = state);
-    }
-
-    function beep(correct) {
-      try {
-        audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
-        const t = audioCtx.currentTime;
-
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-
-        osc.type = "sine";
-        osc.frequency.setValueAtTime(correct ? 860 : 240, t);
-
-        gain.gain.setValueAtTime(0.0001, t);
-        gain.gain.exponentialRampToValueAtTime(0.055, t + 0.01);
-        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.11);
-
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-
-        osc.start(t);
-        osc.stop(t + 0.12);
-      } catch (_) {}
-    }
-
-    function nextUndoneRowIndex() {
-      const next = targets.find(t => !t.done);
-      return next ? next.rowIndex : 0;
-    }
-
-    function buildTargetsForLevel(level) {
-      const chosen = [];
-      const symbolNames = SYMBOLS.map(s => s.name);
-
-      // Shuffle
-      for (let i = symbolNames.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [symbolNames[i], symbolNames[j]] = [symbolNames[j], symbolNames[i]];
-      }
-
-      for (let r = 0; r < level.rows; r++) {
-        const symbolName = symbolNames[r % symbolNames.length];
-        const color = level.useColors ? COLORS[r % COLORS.length] : "bw";
-        chosen.push({ rowIndex: r, symbolName, color, done: false });
-      }
-
-      return chosen;
-    }
-
-    function buildRowContent(level, rowIndex, rowTarget) {
-      const base = [];
-      const count = level.symbolsPerRow;
-
-      for (let i = 0; i < count; i++) {
-        base.push({
-          symbolName: randomSymbolName(),
-          color: randomColor(level.useColors),
-          rowIndex
-        });
-      }
-
-      // Ensure target appears at least twice
-      const insertAt1 = Math.floor(Math.random() * base.length);
-      const insertAt2 = Math.floor(Math.random() * base.length);
-      base[insertAt1] = { symbolName: rowTarget.symbolName, color: rowTarget.color, rowIndex };
-      base[insertAt2] = { symbolName: rowTarget.symbolName, color: rowTarget.color, rowIndex };
-
-      return base.concat(base);
-    }
-
-    function renderTargets() {
-      targetContainer.innerHTML = "";
-
-      targets.forEach(t => {
-        const symbol = getSymbol(t.symbolName);
-        if (!symbol) return;
-
-        const tag = document.createElement("div");
-        tag.className = "target-tag";
-
-        const highlight =
-          !t.done &&
-          !levelComplete &&
-          (mode === MODES.NORMAL || t.rowIndex === activeRowIndex);
-
-        if (highlight) tag.classList.add("active");
-        if (t.done) tag.classList.add("done");
-
-        const img = document.createElement("img");
-        img.alt = symbol.name;
-        img.src = buildSrc(symbol.file);
-        img.classList.add(colorClass(t.color));
-        attachImageFallback(img, symbol.file);
-
-        const meta = document.createElement("div");
-        meta.className = "target-meta";
-
-        const name = document.createElement("div");
-        name.className = "name";
-        name.textContent = symbol.name;
-
-        const meaning = document.createElement("div");
-        meaning.className = "meaning";
-        meaning.textContent = symbol.meaning;
-
-        const rowPill = document.createElement("span");
-        rowPill.className = "pill";
-        rowPill.textContent = `Row ${t.rowIndex + 1}`;
-
-        const colorPill = document.createElement("span");
-        colorPill.className = "pill";
-        colorPill.textContent = (t.color === "bw") ? "B&W" : t.color.toUpperCase();
-
-        meta.appendChild(name);
-        meta.appendChild(meaning);
-
-        tag.appendChild(img);
-        tag.appendChild(meta);
-        tag.appendChild(rowPill);
-        tag.appendChild(colorPill);
-
-        targetContainer.appendChild(tag);
-      });
-    }
-
-    function updateHUD() {
-      const level = LEVELS[currentLevelIndex];
-      const total = targets.length;
-      const doneCount = targets.filter(t => t.done).length;
-
-      levelDisplay.textContent = `LEVEL ${level.level}`;
-      progressCounter.textContent = `${doneCount} / ${total}`;
-      timerPill.textContent = `TIME: ${secondsLeft}`;
-    }
-
-    function stopTimer() {
-      if (timerId) clearInterval(timerId);
-      timerId = null;
-    }
-
-    function startLevelTimer(levelSeconds) {
-      stopTimer();
-      secondsLeft = levelSeconds;
-      updateHUD();
-
-      timerId = setInterval(() => {
-        if (paused || levelComplete) return;
-
-        secondsLeft -= 1;
-        if (secondsLeft <= 0) {
-          secondsLeft = 0;
-          updateHUD();
-          onTimeUp();
-          return;
-        }
-        updateHUD();
-      }, 1000);
-    }
-
-    function onTimeUp() {
-      stopTimer();
-      showToast("Time’s up — try again", "bad", 1200);
-      restartLevel(); // restart same level
-    }
-
-    function onLevelWin() {
-      levelComplete = true;
-      stopTimer();
-      setAllRowsState("paused");
-
-      const levelNum = LEVELS[currentLevelIndex].level;
-      showToast(`Level ${levelNum} cleared`, "good", 1000);
-
-      // Auto-progress after a short beat
-      setTimeout(() => {
-        currentLevelIndex = Math.min(currentLevelIndex + 1, LEVELS.length - 1);
-        buildLevel(currentLevelIndex);
-      }, 900);
-    }
-
-    function onSymbolClick(e) {
-      if (paused || levelComplete) return;
-
-      const img = e.currentTarget;
-
-      // Must be inside the window
-      if (!isInsideSlotWindow(img)) {
-        beep(false);
-        flashLane(Number(img.dataset.row), "bad");
-        img.classList.add("shake");
-        setTimeout(() => img.classList.remove("shake"), 260);
-        return;
-      }
-
-      const rowIndex = Number(img.dataset.row);
-      const symbolName = img.dataset.symbol;
-      const color = img.dataset.color;
-
-      // HARD mode: must solve rows in order
-      if (mode === MODES.HARD && rowIndex !== activeRowIndex) {
-        beep(false);
-        flashLane(rowIndex, "bad");
-        img.classList.add("shake");
-        setTimeout(() => img.classList.remove("shake"), 260);
-        return;
-      }
-
-      const target = targets.find(t => t.rowIndex === rowIndex);
-      if (!target || target.done) {
-        beep(false);
-        flashLane(rowIndex, "bad");
-        img.classList.add("shake");
-        setTimeout(() => img.classList.remove("shake"), 260);
-        return;
-      }
-
-      const symbolMatch = target.symbolName === symbolName;
-      const colorMatch = target.color === color;
-
-      if (!symbolMatch || !colorMatch) {
-        beep(false);
-        flashLane(rowIndex, "bad");
-        img.classList.add("shake");
-        setTimeout(() => img.classList.remove("shake"), 260);
-        return;
-      }
-
-      // Correct
-      beep(true);
-      flashLane(rowIndex, "good");
-      target.done = true;
-      pauseRow(rowIndex);
-
-      if (mode === MODES.HARD) {
-        activeRowIndex = nextUndoneRowIndex();
-      }
-
-      renderTargets();
-      updateHUD();
-
-      if (targets.every(t => t.done)) {
-        onLevelWin();
-      }
-    }
-
-    function buildLevel(levelIndex) {
-      const level = LEVELS[levelIndex];
-      if (!level) return;
-
-      applyResponsiveSizing(level.rows);
-
-      rowsArea.innerHTML = "";
-      paused = false;
-      levelComplete = false;
-
-      targets = buildTargetsForLevel(level);
-
-      // HARD ordering starts at first row
-      activeRowIndex = 0;
-
-      for (let r = 0; r < level.rows; r++) {
-        const lane = document.createElement("div");
-        lane.className = "lane";
-        lane.dataset.row = String(r);
-
-        const movingRow = document.createElement("div");
-        movingRow.className = `moving-row ${rowDirection(r)}`;
-        movingRow.dataset.row = String(r);
-
-        const speed = Math.max(6, level.baseSpeedSeconds - (r % 2));
-        movingRow.style.setProperty("--speed", `${speed}s`);
-
-        const rowTarget = targets.find(t => t.rowIndex === r);
-        const items = buildRowContent(level, r, rowTarget);
-
-        items.forEach(item => {
-          const im = createSymbolImage(item);
-          if (im) movingRow.appendChild(im);
-        });
-
-        lane.appendChild(movingRow);
-        rowsArea.appendChild(lane);
-      }
-
-      renderTargets();
-      updateHUD();
-      setAllRowsState("running");
-      startLevelTimer(level.levelTimeSeconds);
-
-      if (level.level === 4) {
-        showToast("Color unlocked", "good", 1200);
-      }
-    }
-
-    function restartLevel() {
-      stopTimer();
-      buildLevel(currentLevelIndex);
-    }
-
-    function restartFromLevel1() {
-      stopTimer();
-      currentLevelIndex = 0;
-      buildLevel(currentLevelIndex);
-    }
-
-    function setMode(newMode) {
-      mode = newMode;
-      modeNormalBtn.classList.toggle("active", mode === MODES.NORMAL);
-      modeHardBtn.classList.toggle("active", mode === MODES.HARD);
-
-      // In HARD mode, set the required row to the first unfinished
-      activeRowIndex = nextUndoneRowIndex();
-
-      renderTargets();
-      updateHUD();
-
-      showToast(
-        mode === MODES.NORMAL ? "Normal: any order" : "Hard: in order",
-        "good",
-        900
-      );
-    }
-
-    resetButton.addEventListener("click", restartFromLevel1);
-    modeNormalBtn.addEventListener("click", () => setMode(MODES.NORMAL));
-    modeHardBtn.addEventListener("click", () => setMode(MODES.HARD));
-
-    window.onload = () => {
-      setMode(MODES.NORMAL);
-      buildLevel(currentLevelIndex);
-    };
-  </script>
 </body>
 </html>
