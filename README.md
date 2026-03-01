@@ -63,4 +63,8 @@ This project is part of the African Foodways Archive. All rights reserved.
 - Part of the [African Foodways Project](https://chicafricanculture.github.io/)
 - Adinkra symbols and their meanings preserved for cultural education
 
-
+   <div class="footer">
+        <p>Maintained by <a href="https://www.theafricangourmet.com" style="color: #8B4513;">The African Gourmet</a> · Licensed under CC BY 4.0</p>
+        <p>Part of [SankofaKitchen](https://github.com/ChicAfricanCulture) — African foodways retrieved through play  
+[Visit my GitHub profile](https://github.com/ChicAfricanCulture) for more projects</p>
+    </div>
