@@ -1,70 +1,37 @@
 # Adinkra Movers
 
-A moving-row puzzle game where you match West African Adinkra symbols. Test your focus as rows move in different directions, colors distract, and symbols get harder to distinguish.
+A focus game with Adinkra symbols. Rows of symbols slide through a golden window. Tap the right one as it passes, and learn what each symbol means.
 
-🎮 **Play it here**: [Adinkra Movers](https://chicafricanculture.github.io/moving-adinkra/)
+**▶ Play it here: [https://chicafricanculture.github.io/moving-adinkra/](https://chicafricanculture.github.io/moving-adinkra/)**
 
-##How to Play
+A free game from [The African Gourmet](https://www.theafricangourmet.com/), made to help people learn about African food through play.
 
-- Watch the moving rows
-- Find the target symbol shown at the top
-- Click it before it passes
-- Correct clicks stop the row
-- Wrong clicks make the symbol shake
-- Complete all targets to advance
+## How to play
 
-##Levels
+- Look at the symbol you need to find, shown at the top.
+- Watch the moving rows and tap when that symbol is in the golden window.
+- A correct tap stops the row. A wrong tap makes the symbol shake.
+- Find all the targets before time runs out to go to the next level. There are six levels, with more rows and colours as you go.
+- Choose Normal or Hard mode.
 
-| Level | Rows | Symbols | Colors |
-|-------|------|---------|--------|
-| 1 | 1 | 1 | Black only |
-| 2 | 2 | 2 | Black only |
-| 3 | 3 | 3 | Black only |
-| 4 | 4 | 3 | 4 colors |
-| 5 | 5 | 4 | 4 colors |
-| 6 | 6 | 5 | 4 colors |
+## The symbols
 
-##Features
-
-- No text or instructions – pure visual gameplay
-- Six Adinkra symbols with cultural significance
-- Progressive difficulty that teaches as you play
-- Satisfying audio feedback (dings for correct, shake for wrong)
-- Mobile-first design
-
-##Symbols Included
-
-| Symbol | Meaning |
-|--------|---------|
+| Symbol | Meaning shown in the game |
+|---|---|
 | Sankofa | Return and get it |
-| Ram's head (Dwennimmen) | Strength and humility |
+| Dwennimmen | Strength & humility |
 | Gye Nyame | Supremacy of God |
-| Akoma | Love and patience |
-| Duafe | Beauty and care |
-| Odo Nyera Fie Kwan | Eternal love |
+| Akoma | Love & patience |
+| Duafe | Beauty & care |
+| Odo Nyera | Eternal love |
 
-##Built With
+## More from The African Gourmet
 
-- HTML
-- CSS (animations for movement)
-- JavaScript (click detection and game logic)
+- [More African food stories at The African Gourmet](https://www.theafricangourmet.com/)
+- [More games to play and learn](https://www.theafricangourmet.com/p/play-learn-african-food-games.html)
 
-##Live Demo
+---
 
-[Play Adinkra Movers]([Play](https://chicafricanculture.github.io/moving-adinkra/))
+Maintained by [The African Gourmet](https://www.theafricangourmet.com/).
 
-
-##License
-
-This project is part of the African Foodways Archive. All rights reserved.
-
-##Acknowledgments
-
-- Part of the [African Foodways Project](https://chicafricanculture.github.io/)
-- Adinkra symbols and their meanings preserved for cultural education
-
-   <div class="footer">
-        <p>Maintained by <a href="https://www.theafricangourmet.com" style="color: #8B4513;">The African Gourmet</a> · Licensed under CC BY 4.0</p>
-        <p>Part of [SankofaKitchen](https://github.com/ChicAfricanCulture) — African foodways retrieved through play  
-[Visit my GitHub profile](https://github.com/ChicAfricanCulture) for more projects</p>
-    </div>
+MIT License, see [LICENSE](LICENSE).
